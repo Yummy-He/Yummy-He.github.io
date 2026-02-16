@@ -1,0 +1,72 @@
+---
+layout: default
+---
+
+<!-- 复用 page 布局的头部样式 -->
+{% include intro-header.html type='page' %}
+
+<!-- 核心：Project 列表（对齐 HOME 页样式） -->
+<div class="container">
+  <div class="row">
+    {% if site.sidebar == false %}
+    <!-- 无侧边栏：复用 page 布局的栅格 -->
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 postlist-container">
+      {% else %}
+    <!-- 有侧边栏：复用 page 布局的栅格 -->
+    <div class="col-lg-8 col-lg-offset-1 col-md-8 col-md-offset-1 col-sm-12 col-xs-12 postlist-container">
+      {% endif %}
+
+      <!-- 遍历 /project/ 下所有 project-item 布局的文档 -->
+      {% assign projects = site.pages 
+                          | where: "layout", "project-item" 
+                          | where_exp: "page", "page.url contains '/project/'" 
+                          | sort: "date" | reverse %}
+      
+      {% for project in projects %}
+      <div class="post-preview">
+          <a href="{{ project.url | prepend: site.baseurl | replace: '//', '/' }}">
+              <h2 class="post-title">
+                  {{ project.title }}
+              </h2>
+              {% if project.subtitle %}
+              <h3 class="post-subtitle">
+                  {{ project.subtitle }}
+              </h3>
+              {% endif %}
+          </a>
+          <p class="post-meta">
+              Posted by {% if project.author %}{{ project.author }}{% else %}{{ site.title }}{% endif %} {% if project.date %} on {{ project.date | date: "%B %d, %Y" }}{% endif %}
+          </p>
+      </div>
+      <hr>
+      {% endfor %}
+
+    </div>
+
+    <!-- 复用 page 布局的侧边栏（标签/友链/关于我） -->
+    {% if site.sidebar %}
+    <div class="col-lg-3 col-lg-offset-0 col-md-3 col-md-offset-0 col-sm-12 col-xs-12 sidebar-container">
+        {% include featured-tags.html %}
+        {% include short-about.html %}
+        {% include friends.html %}
+        {% include ads.html %}
+    </div>
+    {% else %}
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 sidebar-container">
+        {% include featured-tags.html %}
+        {% include friends.html %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- 复用 page 布局的 MathJax 支持（如需） -->
+{% if site.page-mathjax %}
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    TeX: { equationNumbers: { autoNumber: "AMS" } },
+    tex2jax: { inlineMath: [ ['$','$'] ], displayMath: [ ['$$','$$'] ], processEscapes: true }
+  });
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+{% endif %}

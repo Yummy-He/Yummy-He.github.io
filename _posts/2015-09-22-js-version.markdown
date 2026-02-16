@@ -1,14 +1,15 @@
 ---
 layout:     post
-title:      "「译」ES5, ES6, ES2016, ES.Next: JavaScript 的版本是怎么回事？"
+title:      "Example Post Test"
 subtitle:   "ES5, ES6, ES2016, ES.Next: What's going on with JavaScript versioning?"
 date:       2015-09-22
 author:     "Hux"
 header-img: "img/post-bg-js-version.jpg"
 tags:
-    - Web
+    - 前端开发
     - JavaScript
-    - 译
+    - 翻译
+mathjax: true
 ---
 
 
@@ -23,9 +24,67 @@ JavaScript 有着很奇怪的命名史。
 
 1996 年，网景将 JavaScript 提交给 [ECMA International（欧洲计算机制造商协会）](http://www.ecma-international.org/) 进行标准化，并最终确定出新的语言标准，它就是 ECMAScript。自此，ECMAScript 成为所有 JavaScript 实现的基础，不过，由于 JavaScript 名字的历史原因和市场原因（很显然 ECMAScript 这个名字并不令人喜欢……），现实中我们只用 ECMAScript 称呼标准，平时都还是使用 JavaScript 来称呼这个语言。
 
+$\-\frac{\sqrt{b^2-4ac}}{2}$
+
+
+<svg width="20" height="20" viewBox="0 0 20 20">
+  <circle cx="10" cy="10" r="8" fill="blue" />
+</svg>
+
+```fortran
+C     MATRIX MULTIPLICATION PROGRAM
+C     IMPLICIT TYPING, FIXED FORMAT, DYNAMIC ARRAYS
+C     INPUT: REDIRECTABLE FROM STANDARD INPUT
+C     OUTPUT: TO STANDARD OUTPUT
+      PROGRAM MATMUL
+      IMPLICIT REAL*8 (A-H,O-Z)
+      IMPLICIT INTEGER*4 (I-N)
+C     DECLARE POINTERS FOR DYNAMIC ARRAYS
+      REAL*8, POINTER :: A(:,:), B(:,:), C(:,:)
+      
+C     READ MATRIX DIMENSIONS
+      READ(5,*) M, K, N
+      
+C     ALLOCATE MEMORY FOR MATRICES
+      ALLOCATE(A(M,K), B(K,N), C(M,N))
+      
+C     READ MATRIX A (M x K)
+      DO 10 I = 1, M
+        READ(5,*) (A(I,J), J = 1, K)
+10    CONTINUE
+      
+C     READ MATRIX B (K x N)
+      DO 20 I = 1, K
+        READ(5,*) (B(I,J), J = 1, N)
+20    CONTINUE
+      
+C     PERFORM MATRIX MULTIPLICATION C = A * B
+      DO 30 I = 1, M
+        DO 40 J = 1, N
+          C(I,J) = 0.0D0
+          DO 50 L = 1, K
+            C(I,J) = C(I,J) + A(I,L) * B(L,J)
+50        CONTINUE
+40      CONTINUE
+30    CONTINUE
+      
+C     WRITE RESULT MATRIX C (M x N)
+      WRITE(6,*) 'RESULT MATRIX C:'
+      DO 60 I = 1, M
+        WRITE(6,'(1000F16.4)') (C(I,J), J = 1, N)
+60    CONTINUE
+      
+C     DEALLOCATE MEMORY
+      DEALLOCATE(A)
+      DEALLOCATE(B)
+      DEALLOCATE(C)
+      
+      STOP
+      END
+```
 
 > 术语（译者注）：
-> 
+>
 > * *标准（Standard）*： 用于定义与其他事物区别的一套规则
 > * *实现（Implementation）*： 某个标准的具体实施/真实实践
 
@@ -51,7 +110,7 @@ JavaScript 有着很奇怪的命名史。
 
 #### 一些资源
 
-  
+
 
 * TC39 的 [Github 仓库](https://github.com/tc39/ecma262)上可以看到所有目前公开的提案
 * 如果你还不熟悉 ES6，Babel 有一个[很不错的特性概览](https://babeljs.io/docs/learn-es2015/)
@@ -64,4 +123,3 @@ JavaScript 有着很奇怪的命名史。
 
 本文译自 [ES5, ES6, ES2016, ES.Next: What's going on with JavaScript versioning?](http://benmccormick.org/2015/09/14/es5-es6-es2016-es-next-whats-going-on-with-javascript-versioning/)   
 译者 [黄玄](http://weibo.com/huxpro)，首次发布于 [Hux Blog](http://huangxuan.me)，转载请保留以上链接
-

@@ -1,19 +1,20 @@
 {
-    "name": "hux-blog",
-    "title": "Hux Blog",
-    "author": "Hux <huxpro@gmail.com>",
+    "name": "yummy-blog",
+    "title": "Yummy Blog",
+    "author": "Yummy <yummy@example.com>",
     "version": "1.8.2",
-    "homepage": "http://huxpro.github.io",
+    "homepage": "http://Yummy-He.github.io",
     "repository": {
         "type": "git",
-        "url": "https://github.com/Huxpro/huxpro.github.io"
+        "url": "https://github.com/Yummy-He/Yummy-He.github.io"
     },
-    "bugs": "https://github.com/Huxpro/huxpro.github.io/issues",
+    "bugs": "https://github.com/Yummy-He/Yummy-He.github.io/issues",
     "devDependencies": {
         "grunt": ">=1.3.0",
         "grunt-banner": "~0.2.3",
         "grunt-contrib-less": "^2.0.0",
-        "grunt-contrib-uglify": "^4.0.1",
+        "grunt-contrib-uglify": "^5.2.2",
+        "grunt-contrib-uglify-es": "^3.3.0",
         "grunt-contrib-watch": "^1.1.0"
     },
     "scripts": {

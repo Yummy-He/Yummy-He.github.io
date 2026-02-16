@@ -1,0 +1,73 @@
+/* 代码块容器：相对定位，为按钮预留空间 */
+pre {
+  position: relative;
+  /* 保留 GitHub 原版代码块样式，仅补充定位 */
+  background-color: #f6f8fa;
+  border-radius: 6px;
+  padding: 16px;
+}
+
+/* 核心：GitHub 风格复制按钮（默认仅图标+透明背景） */
+.code-copy-btn {
+  /* 定位与尺寸：和 GitHub 完全一致 */
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  padding: 4px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent; /* 默认透明背景 */
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  fill: #59636E; /* 默认图标颜色 */
+  transition: background-color 0.2s ease, color 0.2s ease;
+  user-select: none;
+  /* 隐藏溢出（成功态文字出现时不撑大按钮） */
+  overflow: visible;
+}
+
+/* 悬停效果：GitHub 原版浅灰背景 */
+.code-copy-btn:hover {
+  background-color: #EFF2F5;
+  fill: #59636E;
+}
+
+/* 复制成功态：图标变绿色 + 左侧显示 copied! 文字 */
+.code-copy-btn.copied {
+  fill: #1A7F37; /* 绿色（GitHub 成功色） */
+  width: auto; /* 展开宽度容纳文字 */
+  padding: 4px 8px 4px 4px; /* 调整内边距 */
+  gap: 4px; /* 图标和文字间距 */
+}
+
+/* 复制图标：默认显示，成功态隐藏 */
+.code-copy-btn .octicon-clippy {
+  display: inline-block;
+}
+.code-copy-btn.copied .octicon-clippy {
+  display: none;
+}
+
+/* 成功图标：默认隐藏，成功态显示 */
+.code-copy-btn .octicon-check {
+  display: none;
+}
+.code-copy-btn.copied .octicon-check {
+  display: inline-block;
+}
+
+/* copied! 文字：默认隐藏，成功态显示（绿色） */
+.code-copy-btn .copied-text {
+  display: none;
+  font-size: 12px;
+  font-weight: 500;
+  color: #000000;
+  white-space: nowrap;
+}
+.code-copy-btn.copied .copied-text {
+  display: inline-block;
+}

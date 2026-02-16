@@ -20,9 +20,13 @@
             <div id="huxblog_navbar">
                 <div class="navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
-                        <li>
-                            <a href="{{ site.baseurl }}/">Home</a>
-                        </li>
+                        <!-- 手动添加入口 -->
+                        <li><a href="{{ site.baseurl }}/">HOME</a></li>
+                        <li><a href="{{ site.baseurl }}/project/">Project</a></li>                        
+                        <li><a href="{{ site.baseurl }}/about/">ABOUT</a></li>
+                        <li><a href="{{ site.baseurl }}/archive/">Archive</a></li>
+
+                        {% comment %}
                         {% for page in site.pages %}
                         {% if page.title and page.hide-in-nav != true %}
                         <li>
@@ -30,6 +34,8 @@
                         </li>
                         {% endif %}
                         {% endfor %}
+                        {% endcomment %}
+
                         <li class="search-icon">
                             <a href="javascript:void(0)">
                                 <i class="fa fa-search"></i>
