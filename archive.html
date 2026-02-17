@@ -20,11 +20,14 @@ https://github.com/kitian616/jekyll-TeXt-theme
 			<div id='tag_cloud' class="tags tags-sup js-tags">
                 <!-- 先筛选符合条件的文章和项目 -->
 				{% assign filtered_posts = site.posts 
-					| where_exp: "post", "post.hidden != true and post.published != false" %}
+					| where_exp: "post", "post.hidden != true" 
+					| where_exp: "post", "post.published != false" %}
 				{% assign filtered_projects = site.pages 
 					| where: "layout", "project-item" 
-					| where_exp: "item", "item.hidden != true and item.published != false"
-					| sort: 'title' %}  
+					| where_exp: "item", "item.hidden != true" 
+					| where_exp: "item", "item.published != false" 
+					| sort: 'title' %}
+
 				<!-- 计算总数量（筛选后） -->
 				{% assign total_posts = filtered_posts.size %}
 				{% assign total_projects = filtered_projects.size %}
