@@ -2,13 +2,40 @@
 layout: null
 ---
 [
+  {% comment %} ----- 初始化一个标志，用于控制元素间的逗号 ----- {% endcomment %}
+  {% assign is_first_item = true %}
+
+  {% comment %} ----- 项目页面（layout: project-item）按标题升序 ----- {% endcomment %}
+  {% assign projects = site.pages | where: "layout", "project-item" | sort: "title" %}
+  {% for project in projects %}
+    {% comment %} ----- 筛选：hidden 不为 true 且 published 不为 false ----- {% endcomment %}
+    {% if project.hidden != true and project.published != false %}
+      {% comment %} ----- 如果不是第一个输出的项，先输出逗号 ----- {% endcomment %}
+      {% unless is_first_item %},{% endunless %}
+      {% assign is_first_item = false %}
+      {
+        "title"    : {{ project.title | jsonify }},
+        "subtitle" : {{ project.subtitle | default: "" | jsonify }},
+        "tags"     : {{ project.tags | join: ', ' | jsonify }},
+        "url"      : "{{ site.baseurl }}{{ project.url }}",
+        "date"     : ""
+      }
+    {% endif %}
+  {% endfor %}
+
+  {% comment %} ----- 文章（site.posts 默认按日期降序） ----- {% endcomment %}
   {% for post in site.posts %}
-    {
-      "title"    : "{{ post.title | escape }}",
-      "subtitle" : "{{ post.subtitle | escape }}",
-      "tags"     : "{{ post.tags | join: ', ' }}",
-      "url"      : "{{ site.baseurl }}{{ post.url }}",
-      "date"     : "{{ post.date }}"
-    } {% unless forloop.last %},{% endunless %}
+    {% comment %} ----- 同样应用筛选条件 ----- {% endcomment %}
+    {% if post.hidden != true and post.published != false %}
+      {% unless is_first_item %},{% endunless %}
+      {% assign is_first_item = false %}
+      {
+        "title"    : {{ post.title | jsonify }},
+        "subtitle" : {{ post.subtitle | default: "" | jsonify }},
+        "tags"     : {{ post.tags | join: ', ' | jsonify }},
+        "url"      : "{{ site.baseurl }}{{ post.url }}",
+        "date"     : {{ post.date | date_to_xmlschema | jsonify }}
+      }
+    {% endif %}
   {% endfor %}
 ]
