@@ -210,10 +210,26 @@ self.addEventListener('fetch', event => {
 
     // If one request is a HTML naviagtion, checking update!
     if (isNavigationReq(event.request)) {
-      // you need "preserve logs" to see this log
-      // cuz it happened before navigating
       console.log(`fetch ${event.request.url}`)
-      event.waitUntil(revalidateContent(cached, fetchedCopy))
+      // 原有的更新检查逻辑
+      event.waitUntil(
+        revalidateContent(cached, fetchedCopy)
+          .then(() => {
+            // 新增：后台更新 offline.html 缓存
+            const offlineUrl = new URL('/offline.html', self.location.origin).href;
+            // 使用 no-store 绕过浏览器 HTTP 缓存，确保拿到最新
+            fetch(offlineUrl, { cache: "no-store" })
+              .then(response => {
+                if (response.ok) {
+                  return caches.open(CACHE).then(cache => cache.put(offlineUrl, response));
+                }
+              })
+              .catch(err => {
+                // 静默失败（例如离线时无法获取，不影响主流程）
+                console.log('Background update of offline.html failed:', err);
+              });
+          })
+      );
     }
   }
 });
