@@ -4,6 +4,7 @@
  * Copyright 2016 @huxpro
  * Licensed under Apache 2.0
  * Register service worker.
+ * Modified by YummyHe
  * ========================================================== */
 
 // SW Version Upgrade Ref: <https://youtu.be/Gb9uI67tqV0>
@@ -42,16 +43,17 @@ if(navigator.serviceWorker){
   // register message receiver
   // https://dbwriteups.wordpress.com/2015/11/16/service-workers-part-3-communication-between-sw-and-pages/
   navigator.serviceWorker.onmessage = (e) => {
-    console.log('SW: SW Broadcasting:', event);
-    const data = e.data
-    
+    const data = e.data;
     if(data.command == "UPDATE_FOUND"){
-      console.log("UPDATE_FOUND_BY_SW", data);
+      // 显示提示条（无操作按钮，1秒后自动消失）
       createSnackbar({
-        message: "Content updated.",
-        actionText:"refresh",
-        action: function(e){location.reload()}
-      })
+        message: "内容更新，页面即将刷新...",
+        duration: 1000   // 持续时间，单位毫秒
+      });
+      // 延迟后自动刷新页面（略长于提示条持续时间，确保用户看到提示）
+      setTimeout(() => {
+        location.reload();
+      }, 2000);
     }
-  }
+  };
 }
