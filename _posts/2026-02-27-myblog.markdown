@@ -1,0 +1,36 @@
+---
+layout:     post
+title:      "欢迎来到何尹铭的 Blog"
+subtitle:   " \"Hello World, Hello Blog\""
+date:       2026-02-27 12:00:00
+author:     "何尹铭"
+header-img: "img/post-bg/post-bg-myblog.jpg"
+# published: false
+tags:
+    - 生活
+---
+
+> “Yeah It's on. ”
+
+
+## 前言
+
+何尹铭的 Blog 开通了。
+
+以后会在这里分享一些生活或技术方面的文章。
+
+我的各个Github仓库的部分内容也会放在[PROJECT](/project){:target="_blank"}模块中，并介绍各个项目、分发资源。
+
+## 致谢
+
+感谢程序员[黄玄](https://huangxuan.me/about/)（a.k.a. Hux, @huxpro）提供的博客模板，让我能快速搭建起一个博客。
+如果我的博客对你有帮助，也不妨给[Hux博客的GitHub项目](https://github.com/Huxpro/huxpro.github.io)点个star ^_^
+
+<img class="shadow" width="320" src="/img/in-post/post-myblog/hux.jpg" />
+<small class="img-hint">Hux @huxpro</small>
+
+感谢AI时代，感谢Deepseek、豆包等AI。借助它们，我能快速读懂项目各个部分、学习如何深度自定义这个博客模板。
+
+## 后记
+
+第一篇博客就是这样，其它的之后再分享。

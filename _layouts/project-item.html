@@ -1,7 +1,8 @@
 ---
 layout: default
 ---
-
+{% include intro-header.html type='post' %}
+{% comment %}
 <!-- 复用 post 布局的头部（支持 header-style: text） -->
 {% if page.header-style == 'text' %}
 <header class="intro-header style-text" >
@@ -36,6 +37,7 @@ layout: default
         </div>
     </div>
 </header>
+{% endcomment %}
 
 <!-- 复用 post 布局的主体结构 -->
 <article>

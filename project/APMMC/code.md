@@ -5,11 +5,6 @@ layout: project-post
 author: "何尹铭"
 header-style: text
 # hidden: true
-tags:
-  - LaTeX
-  - Fortran
-  - Linux
-  - 笔记
 ---
 
 
