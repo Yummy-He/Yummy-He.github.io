@@ -4,7 +4,8 @@ title:      "Example Post with Code Highlight"
 subtitle:   "CommonJS，RequireJS，SeaJS 归纳笔记"
 date:       2015-05-25
 author:     "Hux"
-header-img: "img/post-bg-js-module.jpg"
+header-img: "img/post-bg/post-bg-js-module.jpg"
+published: false
 tags:
     - 前端开发
     - JavaScript
@@ -26,12 +27,16 @@ tags:
 ## Catalog
 
 
-1.  [CommonJS & Node](#commonjs--node)
-3.  [History](#history)
-4.  [RequireJS & AMD](#requirejs--amd)
-5.  [SeaJS & CMD](#seajs--cmd)
-6.  [AMD vs CMD](#amd-vs-cmd)
-7.  [WebPack](#webpack)
+- [Foreword](#foreword)
+- [Catalog](#catalog)
+- [CommonJS \& Node](#commonjs--node)
+- [History](#history)
+- [RequireJS \& AMD](#requirejs--amd)
+  - [1. **执行时机**](#1-执行时机)
+  - [2. **书写风格**](#2-书写风格)
+- [SeaJS \& CMD](#seajs--cmd)
+- [AMD vs CMD](#amd-vs-cmd)
+- [WebPack](#webpack)
 
 
 

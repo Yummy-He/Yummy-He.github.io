@@ -4,11 +4,15 @@ title:      "Example Post Test"
 subtitle:   "ES5, ES6, ES2016, ES.Next: What's going on with JavaScript versioning?"
 date:       2015-09-22
 author:     "Hux"
-header-img: "img/post-bg-js-version.jpg"
+header-img: "img/post-bg/post-bg-js-version.jpg"
+header-img-credit: "Test"
+header-img-credit-href: "huangxuan.me"
+# published: false
 tags:
     - 前端开发
     - JavaScript
     - 翻译
+    - LaTeX
 mathjax: true
 ---
 

@@ -2,7 +2,7 @@
 title: Archive
 layout: default
 description: "「我干了什么 究竟拿了时间换了什么」"
-header-img: "img/bg-little-universe.jpg"
+header-img: "img/archive-bg.jpg"
 ---
 
 <!--
@@ -70,7 +70,7 @@ https://github.com/kitian616/jekyll-TeXt-theme
 					</a>__SEPERATOR__
 				{% endfor %}
 				{% endcapture %}
-				{{ sorted_tags | split:'__SEPERATOR__' | reject: '' }}
+				{{ sorted_tags | split:'__SEPERATOR__' | reject: '' | sort }}
 			</div>
 
 			<!-- Article List -->

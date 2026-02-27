@@ -1,10 +1,10 @@
 # Site settings
 title: 何尹铭 Blog
-SEOTitle: 何尹铭的博客 | 何尹铭 Blog
+SEOTitle: 何尹铭的博客 | Yummy Blog
 header-img: img/home-bg.jpg
-email: huxpro@gmail.com
-description: "这里是 @Hux何尹铭 的个人博客，与你一起发现更小的世界 | 要做一个有 swag 的程序员"
-keyword: "何尹铭, 何尹铭的博客, Hux Blog, 博客, 个人网站"
+email: yummy_he_mail@qq.com
+description: "这里是 @Yummy 何尹铭 的个人博客"
+keyword: "何尹铭, 何尹铭的博客, Yummy Blog, 博客, 个人网站"
 url: "" # your host, for absolute URL
 baseurl: "" # for example, '/blog' if your blog hosted on 'host/blog'
 
@@ -72,13 +72,13 @@ netease_comment: false
 # ba_track_id: [your track id]
 
 # Google Analytics
-ga_track_id: "UA-49627206-1" # Format: UA-xxxxxx-xx
-ga_domain: huangxuan.me
+# ga_track_id: "UA-49627206-1" # Format: UA-xxxxxx-xx
+# ga_domain: huangxuan.me
 
 # Sidebar settings
 sidebar: true # whether or not using Sidebar.
-sidebar-about-description: "要做一个有 swag 的程序员 <br> React Team @ Meta"
-# sidebar-avatar: https://github.com/Huxpro.png # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-about-description: "一个简单的本科生 <br>  @ Jilin University"
+sidebar-avatar: https://github.com/Yummy-He.png # use absolute URL, seeing it's used in both `/` and `/about/`
 
 # Featured Tags
 featured-tags: true # whether or not using Feature-Tags

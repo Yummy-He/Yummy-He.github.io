@@ -1,4 +1,4 @@
-// 声明 MapleMono 等宽字体（放在 hux-blog.less 开头）
+// 声明 MapleMono 等宽字体（放在开头）
 @font-face {
   font-family: "MapleMono"; // 自定义字体名称，后续引用用此名称
   src: url("../fonts/MapleMonoNL-NF-CN-Regular.ttf") format("truetype");
@@ -919,7 +919,7 @@ img::-moz-selection {
     &:hover,
     &:active,
     &.focus {
-      background-color: #0085a1 !important;
+      background-color: @brand-primary !important;
     }
     &.focus {
       box-shadow: rgba(0, 0, 0, 0.117647) 0 1px 6px,
@@ -957,7 +957,7 @@ img::-moz-selection {
   }
 }
 .listing-seperator {
-  color: #0085a1;
+  color: @brand-primary;
   font-size: 21px !important;
   &::before {
     margin-right: 5px;

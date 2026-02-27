@@ -7,6 +7,7 @@ author: "Hux"
 header-style: text
 tags:
   - CS Idols
+  - LaTeX
 ---
 
 > - [wiki](https://en.wikipedia.org/wiki/Peter_Landin)

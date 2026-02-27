@@ -4,7 +4,8 @@ title:      "Welcome to Hux Blog"
 subtitle:   " \"Hello World, Hello Blog\""
 date:       2015-01-29 12:00:00
 author:     "Hux"
-header-img: "img/post-bg-2015.jpg"
+header-img: "img/post-bg/post-bg-2015.jpg"
+# published: false
 tags:
     - 生活
 ---

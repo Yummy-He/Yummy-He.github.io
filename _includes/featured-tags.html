@@ -3,26 +3,61 @@
 {% endcomment %}
 
 {% if site.featured-tags %}
+{% comment %} ----- 新增：筛选文章和项目（与 archive 页面逻辑保持一致） ----- {% endcomment %}
+{% assign filtered_posts = site.posts 
+    | where_exp: "post", "post.hidden != true" 
+    | where_exp: "post", "post.published != false" %}
+
+{% assign filtered_projects = site.pages 
+    | where: "layout", "project-item" 
+    | where_exp: "item", "item.hidden != true" 
+    | where_exp: "item", "item.published != false" 
+    | sort: 'title' %}
+
+{% assign total_items = filtered_posts.size | plus: filtered_projects.size %}
+
+{% comment %} ----- 收集所有标签（文章 + 项目）----- {% endcomment %}
+{% assign all_tags = '' | split: '' %}
+{% for post in filtered_posts %}
+    {% for tag in post.tags %}
+        {% assign all_tags = all_tags | push: tag %}
+    {% endfor %}
+{% endfor %}
+{% for item in filtered_projects %}
+    {% for tag in item.tags %}
+        {% assign all_tags = all_tags | push: tag %}
+    {% endfor %}
+{% endfor %}
+
+{% comment %} ----- 按标签分组并统计数量 ----- {% endcomment %}
+{% assign tag_groups = all_tags | group_by: tag %}
+
 <section>
     {% if include.bottom %}
         <hr class="hidden-sm hidden-xs">
     {% endif %}
-    <h5><a href="{{'/archive/' | prepend: site.baseurl }}">FEATURED TAGS</a></h5>
+    <h5><a href="{{ '/archive/' | prepend: site.baseurl }}">FEATURED TAGS</a></h5>
     <div class="tags">
-        {% capture tags %}
-        {% comment %}
-            there must be no space between for and if otherwise this tricky sort won't work.
-            url_encode/decode is for escaping otherwise extra <a> will get generated 
-            but it will break sort...
-        {% endcomment %}
-        {% for tag in site.tags %}{% if tag[1].size > site.featured-condition-size %}
-                <a data-sort="{{ site.posts.size | minus: tag[1].size | prepend: '0000' | slice: -4, 4 }}" 
-                    href="{{ site.baseurl }}/archive/?tag={{ tag[0] | url_encode }}"
-                    title="{{ tag[0] }}"
-                    rel="{{ tag[1].size }}">{{ tag[0] }}</a>__SEPARATOR__
-        {% endif %}{% endfor %}
+        {% capture tags_html %}
+        {% for group in tag_groups %}
+            {% assign tag_name = group.name %}
+            {% assign tag_size = group.size %}
+            {% if tag_size > site.featured-condition-size %}
+                {% comment %} 
+                    计算排序值：total_items - tag_size，差值越小（即 tag 数量越大）越靠前。
+                    填充至4位数字以保证字符串排序正确。
+                    若 total_items 可能超过 9999，请将 '0000' 增加为 '00000'，slice 参数相应改为 -5,5。
+                {% endcomment %}
+                {% assign sort_val = total_items | minus: tag_size | prepend: '0000' | slice: -4, 4 %}
+                <a data-sort="{{ sort_val }}"
+                   href="{{ site.baseurl }}/archive/?tag={{ tag_name | url_encode }}"
+                   title="{{ tag_name }}"
+                   target="_blank"
+                   rel="{{ tag_size }}">{{ tag_name }}</a>__SEPARATOR__
+            {% endif %}
+        {% endfor %}
         {% endcapture %}
-        {{ tags | split:'__SEPARATOR__' | sort }}
+        {{ tags_html | split:'__SEPARATOR__' | sort }}
     </div>
 </section>
 {% endif %}
