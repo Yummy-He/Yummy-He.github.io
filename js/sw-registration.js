@@ -24,8 +24,8 @@ function handleRegistration(registration){
       } else {
         console.log('A Visit without previous SW');
         createSnackbar({
-          message: 'App ready for offline use.',
-          duration: 3000
+          message: '访问过的页面可离线访问。',
+          duration: 5000
         })
       }
     };
