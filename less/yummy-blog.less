@@ -1,10 +1,31 @@
-// 声明 MapleMono 等宽字体（放在开头）
+// MapleMono 等宽字体
 @font-face {
-  font-family: "MapleMono"; // 自定义字体名称，后续引用用此名称
-  src: url("../fonts/MapleMonoNL-NF-CN-Regular.ttf") format("truetype");
-  font-weight: normal;      // 匹配字体字重（常规体）
-  font-style: normal;       // 常规样式
-  font-display: swap;       // 可选：优化字体加载体验，避免闪屏
+  font-family: "MapleMono";
+  src: url("../fonts/MapleMono-CN-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "MapleMono";
+  src: url("../fonts/MapleMono-CN-Bold.woff2") format("woff2");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "MapleMono";
+  src: url("../fonts/MapleMono-CN-Italic.woff2") format("woff2");
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "MapleMono";
+  src: url("../fonts/MapleMono-CN-BoldItalic.woff2") format("woff2");
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
 }
 
 @import "variables.less";

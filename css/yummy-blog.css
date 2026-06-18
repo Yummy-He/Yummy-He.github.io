@@ -1,13 +1,29 @@
-/*!
- * Yummy Blog v1.8.2 (http://Yummy-He.github.io)
- * Copyright 2026 Yummy <yummy@example.com>
- */
-
 @font-face {
   font-family: "MapleMono";
-  src: url("../fonts/MapleMonoNL-NF-CN-Regular.ttf") format("truetype");
+  src: url("../fonts/MapleMono-CN-Regular.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "MapleMono";
+  src: url("../fonts/MapleMono-CN-Bold.woff2") format("woff2");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "MapleMono";
+  src: url("../fonts/MapleMono-CN-Italic.woff2") format("woff2");
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "MapleMono";
+  src: url("../fonts/MapleMono-CN-BoldItalic.woff2") format("woff2");
+  font-weight: bold;
+  font-style: italic;
   font-display: swap;
 }
 @media (min-width: 1200px) {
@@ -592,7 +608,7 @@ button.paper-button {
   font-size: 20px;
 }
 .search-page #search-input {
-  font-family: "Fira Code", Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family: "MapleMono", "Fira Code", Menlo, Monaco, Consolas, "Courier New", monospace;
   border: none;
   outline: none;
   padding: 0;
@@ -822,7 +838,7 @@ code,
 kbd,
 pre,
 samp {
-  font-family: "Fira Code", Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family: "MapleMono", "Fira Code", Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 .postlist-container {
   margin-bottom: 15px;
