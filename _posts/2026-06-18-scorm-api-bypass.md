@@ -5,6 +5,7 @@ subtitle:   "如何在 30 秒内「完成」任何 SCORM 在线课程"
 date:       2026-06-18 12:00:00
 author:     "何尹铭、Deepseek"
 header-img: "img/post-bg/post-bg-20260618.jpg"
+header-mask: 0.7
 tags:
     - 安全
     - Web
