@@ -169,7 +169,7 @@ Yummy-He.github.io/
 │   ├── search.less          #   搜索样式
 │   └── snackbar.less        #   提示条样式
 │
-├── fonts/                   # 字体文件
+├── fonts/                   # 字体文件（自定义等宽字体 MapleMono WOFF2）
 ├── img/                     # 图片资源
 │   ├── home-bg.jpg          #   首页头图
 │   ├── about-bg.jpg         #   关于页头图
@@ -1295,7 +1295,23 @@ npx grunt watch
 2. **less**：编译 `less/yummy-blog.less` → `css/yummy-blog.css` + `css/yummy-blog.min.css`
 3. **usebanner**：在输出的 CSS/JS 文件顶部添加版本注释
 
-### 19.5 自定义样式
+### 19.5 自定义代码块字体
+
+代码块等宽字体在 `less/mixins.less` 的 `.monospace` 混合宏中配置：
+
+```less
+.monospace () {
+    font-family: "MapleMono", "Fira Code", Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+```
+
+字体文件通过 `@font-face` 声明在 `less/yummy-blog.less` 开头加载。更换字体时：
+1. 将 WOFF2 字体文件放入 `fonts/` 目录
+2. 在 `less/yummy-blog.less` 中修改 `@font-face` 的 `src: url()` 路径
+3. 更新 `less/mixins.less` 中 `.monospace` 的 `font-family` 名称
+4. 运行 `npx grunt less` 重新编译 CSS
+
+### 19.6 自定义样式
 
 修改 LESS 源文件后，运行 `npx grunt` 重新构建。或者直接修改 `css/yummy-blog.css`（不推荐，会被覆盖）。
 
@@ -1608,4 +1624,4 @@ bundle exec jekyll build
 
 > **文档维护说明**：本文档覆盖了 Yummy Blog v1.8.2 的所有功能和配置。如有新增功能或参数变更，请同步更新本文档。
 >
-> 本文档生成于 2026-05-06。
+> 本文档生成于 2026-06-18。
