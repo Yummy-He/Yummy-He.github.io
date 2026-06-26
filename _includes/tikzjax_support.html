@@ -1,0 +1,15 @@
+<!-- TikZJax: LaTeX TikZ 图形渲染 -->
+<link rel="stylesheet" type="text/css" href="{{ site.baseurl }}/assets/tikzjax/fonts.css">
+<style>
+  /* TikZJax SVG 水平居中 + 防止边界裁剪 */
+  svg.tikzjax {
+    display: block;
+    margin: 1em auto;
+    overflow: visible;
+    padding: 4px;
+    box-sizing: content-box;
+  }
+  .tikzjax-container { overflow: visible; }
+  .tikzjax-scaled-container { width: 100%; height: 100%; }
+</style>
+<script src="{{ site.baseurl }}/assets/tikzjax/tikzjax.js" defer></script>

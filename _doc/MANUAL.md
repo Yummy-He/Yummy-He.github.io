@@ -23,7 +23,7 @@
 11. [搜索功能](#11-搜索功能)
 12. [评论系统](#12-评论系统)
 13. [数据分析与统计](#13-数据分析与统计)
-14. [数学公式（MathJax）](#14-数学公式mathjax)
+14. [数学公式与图形（MathJax / TikZJax）](#14-数学公式与图形mathjax--tikzjax)
 15. [多语言支持](#15-多语言支持)
 16. [社交网络链接（SNS）](#16-社交网络链接sns)
 17. [友情链接（Friends）](#17-友情链接friends)
@@ -70,6 +70,7 @@
 - 项目文档模块（Project）
 - PWA 离线访问 + 内容更新通知
 - 数学公式支持（MathJax 3，SVG 渲染）
+- TikZ 图形渲染（TikZJax，自建部署，WebAssembly）
 - 代码一键复制按钮
 - 多语言支持框架
 - Disqus / 网易云跟帖 评论系统
@@ -110,6 +111,7 @@ Yummy-He.github.io/
 │   ├── search.html          #   搜索弹出层
 │   ├── ads.html             #   Google AdSense 广告
 │   ├── mathjax_support.html #   MathJax 数学公式配置
+│   ├── tikzjax_support.html #   TikZJax 图形渲染配置
 │   ├── multilingual-sel.html#   多语言选择器
 │   └── about/               #   关于页面中英内容
 │       ├── zh.md
@@ -170,6 +172,8 @@ Yummy-He.github.io/
 │   ├── search.less          #   搜索样式
 │   └── snackbar.less        #   提示条样式
 │
+├── assets/
+│   └── tikzjax/              #   TikZJax 自建部署文件（JS/WASM/字体/TeX包）
 ├── fonts/                   # 字体文件（自定义等宽字体 MapleMono WOFF2）
 ├── img/                     # 图片资源
 │   ├── home-bg.jpg          #   首页头图
@@ -400,6 +404,7 @@ key: value
 | `header-img-credit-href`| string | (空) | 头图来源链接 |
 | `tags` | array | `[]` | 文章标签列表 |
 | `mathjax` | boolean | `false` | 是否为该文章单独加载 MathJax |
+| `tikzjax` | boolean | `false` | 是否为该文章单独加载 TikZJax |
 | `no-catalog` | boolean | `false` | 设为 `true` 则隐藏该文章的侧边目录 |
 | `multilingual` | boolean | `false` | 是否启用中英双语 |
 | `content-preview` | boolean | 未设置 | 是否在首页显示文章内容预览 |
@@ -428,6 +433,7 @@ tags:
     - Fortran
     - 笔记
 mathjax: true
+tikzjax: false
 no-catalog: false
 multilingual: false
 published: true
@@ -654,6 +660,7 @@ default.html  （最基础布局，HTML骨架）
 | `search.html` | 搜索弹出层 HTML 结构 |
 | `ads.html` | Google AdSense 广告单元 |
 | `mathjax_support.html` | MathJax 3 配置（SVG渲染，含分隔符、缩放、mhchem） |
+| `tikzjax_support.html` | TikZJax 配置（WebAssembly 图形渲染，自建部署） |
 | `multilingual-sel.html` | 中英文语言切换下拉框 |
 | `about/zh.md` | 关于页中文内容 |
 | `about/en.md` | 关于页英文内容（空文件） |
@@ -723,6 +730,7 @@ tags:
     - 标签1
     - 标签2
 mathjax: false
+tikzjax: false
 no-catalog: false
 published: true
 ---
@@ -1067,7 +1075,7 @@ ba_track_id: "your-baidu-id"      # 取消注释并填入你的百度统计ID
 
 ---
 
-## 14. 数学公式（MathJax 3）
+## 14. 数学公式与图形（MathJax 3 / TikZJax）
 
 本站使用 **MathJax 3** 提供 LaTeX 数学公式渲染，输出格式为 SVG。
 
@@ -1198,6 +1206,127 @@ MathJax = {
 | 控制台报 "MathJax retry" 错误 | mhchem 等扩展动态加载失败 | 检查 `options.menuOptions.settings.assistiveMml` 是否为 `false` |
 | 公式渲染但样式异常 | CSS 冲突 | 检查主题样式是否覆盖了 MathJax SVG |
 | 化学式 `\ce` 不渲染 | mhchem 扩展未加载 | mhchem 已内置在 tex-svg.js 中，`\ce` 自动触发加载 |
+### 14.7 TikZ 图形渲染（TikZJax）
+
+本站集成 **TikZJax** 实现 LaTeX TikZ 图形在浏览器中的直接渲染，采用**自建部署**方案，所有文件本地托管。
+
+**工作原理**：TikZJax 将 TeX 引擎通过 WebAssembly 编译到浏览器端运行，TikZ 源码 → DVI → SVG 的转换完全在客户端完成，首次初始化 < 500ms，后续利用 IndexedDB 缓存几乎即时渲染。
+
+#### 14.7.1 单篇文章启用
+
+在文章的 Front Matter 中设置：
+
+```yaml
+tikzjax: true
+```
+
+这会在该文章页底部加载 TikZJax 脚本（`_includes/tikzjax_support.html`），加载 `fonts.css` + `tikzjax.js`。
+
+#### 14.7.2 在 Markdown 中嵌入 TikZ
+
+使用 `<script type="text/tikz">` 标签嵌入 TikZ 代码：
+
+```html
+<script type="text/tikz">
+\begin{tikzpicture}
+  \draw[->] (0,0) -- (2,0) node[right] {$x$};
+  \draw[->] (0,0) -- (0,2) node[above] {$y$};
+  \draw[blue, thick] (0,0) circle (1);
+\end{tikzpicture}
+</script>
+```
+
+**注意**：如果直接写在 Markdown 中（非 raw 包裹），Jekyll/Liquid 可能会解析 `{`  `%` 等字符导致渲染失败。大多数情况下直接写即可工作。如遇到问题，可用 `{% raw %}{% endraw %}` 包裹整个 `<script>` 块。
+
+#### 14.7.3 配置选项
+
+`<script>` 标签支持 `data-*` 属性控制行为：
+
+| 属性 | 说明 | 示例 |
+|------|------|------|
+| `data-tex-packages` | 加载额外 TeX 包（JSON） | `'{"pgfplots":""}'` |
+| `data-tikz-libraries` | 加载 TikZ 库 | `"arrows.meta,calc,positioning"` |
+| `data-add-to-preamble` | 自定义 preamable | `"\\usepackage{siunitx}"` |
+| `data-show-console` | 显示 TeX 编译日志 | `"true"` |
+| `data-disable-cache` | 禁用 IndexedDB 缓存 | `"true"` |
+| `data-aria-label` | SVG 无障碍标签 | `"函数y=sin(x)图像"` |
+
+**示例**（使用 pgfplots 绘图）：
+
+```html
+<script type="text/tikz" data-tex-packages='{"pgfplots":""}'>
+\begin{tikzpicture}
+  \begin{axis}[
+    width=10cm, height=6cm,
+    xlabel={$x$}, ylabel={$f(x)$},
+    grid=major]
+    \addplot[blue, thick, samples=100] {sin(deg(x))};
+  \end{axis}
+\end{tikzpicture}
+</script>
+```
+
+**示例**（使用 TikZ 库绘制流程图）：
+
+```html
+<script type="text/tikz" data-tikz-libraries="arrows.meta,calc,positioning">
+\begin{tikzpicture}[
+  node distance=2cm,
+  box/.style={draw, rounded corners, minimum width=3cm, minimum height=1cm, align=center},
+  arrow/.style={->, >=Stealth, thick}]
+
+  \node[box] (a) {输入};
+  \node[box, right=of a] (b) {处理};
+  \node[box, right=of b] (c) {输出};
+
+  \draw[arrow] (a) -- (b);
+  \draw[arrow] (b) -- (c);
+\end{tikzpicture}
+</script>
+```
+
+#### 14.7.4 自建部署说明
+
+TikZJax 相关文件位于 `assets/tikzjax/` 目录：
+
+```text
+assets/tikzjax/
+├── tikzjax.js       # 主加载脚本（53KB），寻找 <script type="text/tikz"> 并触发渲染
+├── run-tex.js       # Web Worker 脚本（524KB），在后台线程运行 TeX 引擎
+├── tex.wasm.gz      # TeX WebAssembly 二进制（123KB）
+├── core.dump.gz     # TeX 内存转储（2.9MB），加速初始化
+├── fonts.css        # 字体样式（13KB）
+├── fonts/           # 字体文件（152个 .woff2，共约 1.8MB）
+└── tex_files/       # TeX 宏包文件（172个 .sty.gz）
+```
+
+**升级方式**：从 [npm @rod2ik/tikzjax](https://www.npmjs.com/package/@rod2ik/tikzjax) 下载最新版本，替换 `assets/tikzjax/` 目录下同名文件即可。
+
+**CDN vs 自建**：自建部署避免了第三方 CDN 的可用性风险，所有文件随博客一起托管在 GitHub Pages，零额外成本。
+
+#### 14.7.5 可用的 TeX 包和 TikZ 库
+
+**内置 TeX 包**：`amsmath`, `amssymb`, `amsfonts`, `array`, `etoolbox`, `hf-tikz`, `pgfplots`, `tikz-3dplot`, `tikz-cd`, `xparse` 等
+
+**内置 TikZ 库**：`arrows`, `arrows.meta`, `calc`, `positioning`, `shapes`, `patterns`, `decorations`, `backgrounds`, `fit`, `matrix`, `chains`, `scopes`, `3d` 等（几乎所有标准库，`external` 等少数不适合浏览器环境的除外）
+
+#### 14.7.6 CSS 辅助类
+
+| 类名 | 说明 |
+|------|------|
+| `.tikzjax-container` | `overflow: visible` |
+| `.tikzjax-scaled-container` | `width: 100%; height: 100%` |
+
+#### 14.7.7 故障排查
+
+| 症状 | 可能原因 | 解决 |
+|------|----------|------|
+| 图形不显示，只有空白 | 未设置 `tikzjax: true` | 检查文章 Front Matter |
+| 看到加载动画后消失 | TeX 编译失败 | 添加 `data-show-console="true"` 查看日志 |
+| 渲染为原始 TikZ 代码文本 | `<script>` 标签 `type` 属性缺失 | 确保 `type="text/tikz"` |
+| LuaLaTeX 报错 | 使用了不支持的宏包 | 检查 14.7.5 节可用列表 |
+| 字体不正确 | fonts.css 文件丢失 | 检查浏览器 Network 面板，确认 `assets/tikzjax/fonts.css` 可访问 |
+| 首次加载慢 | tex.wasm 下载 + WASM 初始化 | 首次 ~500ms，后续 IndexedDB 缓存即时 |
 
 ---
 
@@ -1615,14 +1744,25 @@ bundle exec jekyll serve
 4. MathJax CDN（jsDelivr）是否可访问？
 5. 公式中 `$` 前后是否有空格？（`$ E=mc^2 $` 带空格无法识别）
 
-### 24.6 Service Worker 问题
+### 24.6 TikZ 图形不渲染
+
+**排查**：
+1. 文章 Front Matter 中 `tikzjax: true` 是否已设置？
+2. 浏览器 Network 面板能否成功加载 `assets/tikzjax/tikzjax.js`？
+3. 是否在无网络环境下首次访问？（WASM 首次需从服务器下载 ~3.5MB）
+4. TikZ 代码语法是否正确？（可先用 [TikZJax 在线编辑器](https://tikzjax-demo.think.somethingorotherwhatever.com/) 测试）
+5. 是否使用了不被支持的宏包或 TikZ 库？（参考可用列表）
+6. `<script>` 标签的 `type` 属性是否为 `"text/tikz"`？
+7. 节点文本是否包含中文或其他非拉丁字符？TikZJax 使用的 Computer Modern 字体不含 CJK 字形，TeX 编译会失败。节点文本应使用英文或数学模式（如 `$f(x)$`）。
+
+### 24.7 Service Worker 问题
 
 **排查**：
 1. `sw.js` 是否在项目根目录？（SW 只能控制同级或子级路径）
 2. `_config.yml` 中 `service-worker: true`？
 3. 开发模式下 SW 可能行为异常，尝试在生产环境测试
 
-### 24.7 搜索无结果
+### 24.8 搜索无结果
 
 **排查**：
 1. `search.json` 是否正确生成？（访问 `http://localhost:4000/search.json`）
@@ -1689,6 +1829,7 @@ bundle exec jekyll serve
 | `header-img-credit-href` | string | 否 | (空) | 头图署名链接 |
 | `tags` | array | 否 | `[]` | 标签列表 |
 | `mathjax` | boolean | 否 | `false` | 加载MathJax |
+| `tikzjax` | boolean | 否 | `false` | 加载TikZJax |
 | `no-catalog` | boolean | 否 | `false` | 隐藏目录 |
 | `multilingual` | boolean | 否 | `false` | 双语模式 |
 | `content-preview` | boolean | 否 | 否 | 首页预览 |
