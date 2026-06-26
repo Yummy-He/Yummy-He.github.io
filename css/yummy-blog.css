@@ -1,3 +1,8 @@
+/*!
+ * Yummy Blog v1.8.2 (http://Yummy-He.github.io)
+ * Copyright 2026 Yummy <yummy@example.com>
+ */
+
 @font-face {
   font-family: "MapleMono";
   src: url("../fonts/MapleMono-CN-Regular.woff2") format("woff2");
@@ -764,6 +769,9 @@ a {
 a:hover,
 a:focus {
   color: #FF6347;
+}
+a:focus:not(:focus-visible) {
+  outline: none;
 }
 a img:hover,
 a img:focus {

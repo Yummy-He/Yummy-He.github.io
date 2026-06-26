@@ -82,6 +82,10 @@ a {
   &:focus {
     color: @brand-primary;
   }
+  // 鼠标点击时不显示 outline，键盘导航时保留
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
 }
 
 a img {
