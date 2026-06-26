@@ -48,8 +48,9 @@
 
 | 技术 | 用途 |
 |------|------|
-| **Jekyll** 3.x | 静态网站生成引擎 |
-| **GitHub Pages** | 免费托管 |
+| **Jekyll** 4.x | 静态网站生成引擎 |
+| **GitHub Actions** | CI/CD 自动构建部署 |
+| **GitHub Pages** | 静态站点托管 |
 | **kramdown** | Markdown 渲染器，支持 GFM（GitHub Flavored Markdown） |
 | **Rouge** | 代码语法高亮 |
 | **Bootstrap** 3 | 前端CSS框架 |
@@ -184,7 +185,7 @@ Yummy-He.github.io/
 └── _site/                   # [生成] Jekyll 构建输出（不需手动编辑）
 ```
 
-> **提示**：下划线 `_` 开头的目录是 Jekyll 的特殊目录，构建时会被特殊处理。`_site/` 是 `jekyll build` 的输出目录，部署到 GitHub Pages 的内容即为该目录的内容，GitHub Pages 会自动完成构建。
+> **提示**：下划线 `_` 开头的目录是 Jekyll 的特殊目录，构建时会被特殊处理。`_site/` 是 `jekyll build` 的输出目录。部署通过 GitHub Actions 自定义工作流完成（见[第 23 章](#23-部署到-github-pages)）。
 
 ---
 
@@ -239,7 +240,7 @@ mail-address: yummy_he_mail@qq.com  # 邮箱（会显示邮箱图标链接）
 highlighter: rouge              # 代码语法高亮引擎。GitHub Pages 仅支持 rouge
 permalink: pretty               # 文章URL格式。"pretty" 表示 /:categories/:year/:month/:day/:title/
 paginate: 10                    # 首页每页显示的文章数
-plugins: [jekyll-paginate]      # 使用的Jekyll插件列表
+plugins: [jekyll-paginate, jekyll-mentions, jekyll-feed, jekyll-sitemap]  # 使用的Jekyll插件列表
 ```
 
 **permalink 可选值**：
@@ -1464,7 +1465,7 @@ CONFIG = {
 
 ### 22.1 前置要求
 
-- **Ruby** ≥ 2.5（Jekyll 运行环境）
+- **Ruby** ≥ 2.7（Jekyll 4.x 运行环境）
 - **Bundler**（`gem install bundler`）
 - **Node.js** + npm（Grunt 构建 CSS/JS）
 - **Git**
@@ -1515,18 +1516,30 @@ bundle exec jekyll build
 
 ```ruby
 source "https://rubygems.org"
-gem "github-pages", group: :jekyll_plugins
+
+gem "jekyll", "~> 4.4"
+gem "kramdown-parser-gfm"
+gem "rouge", "~> 4.0"
+gem "webrick"
+
+# 实际使用的插件
+gem "jekyll-paginate"
+gem "jekyll-mentions"
+
+# 可选插件
+gem "jekyll-feed"
+gem "jekyll-sitemap"
 ```
 
-使用 `github-pages` gem 确保本地环境与 GitHub Pages 生产环境一致。
+项目不再依赖 `github-pages` gem，改为直接管理各依赖版本。这样可以获得 Jekyll 4.x 和 Rouge 4.x 的较新版本。
 
 ---
 
 ## 23. 部署到 GitHub Pages
 
-### 23.1 自动部署
+### 23.1 自动部署（GitHub Actions）
 
-GitHub Pages 会自动构建 Jekyll 站点。只需：
+项目使用 GitHub Actions 自定义工作流构建并部署。推送代码后自动触发：
 
 ```bash
 git add .
@@ -1534,19 +1547,27 @@ git commit -m "更新内容"
 git push origin main
 ```
 
-推送后，GitHub Actions 会自动构建并部署。站点地址：
-`https://Yummy-He.github.io`
+工作流文件位于 `.github/workflows/deploy.yml`，构建流程包含：
+1. 安装 Ruby 依赖（`bundle install`）
+2. 安装 Node.js 依赖并运行 Grunt 构建 CSS/JS
+3. 执行 `jekyll build` 生成静态文件
+4. 部署到 GitHub Pages
 
-### 23.2 手动构建部署（不推荐）
+站点地址：`https://Yummy-He.github.io`
 
-如果需要手动部署到 `gh-pages` 分支或自定义服务器：
+> **注意**：GitHub 仓库的 **Settings > Pages > Source** 必须设置为 **"GitHub Actions"**。
+
+### 23.2 本地手动构建
 
 ```bash
-# 构建
+# 构建 CSS/JS
+npm install && npx grunt
+
+# 构建站点
 bundle exec jekyll build
 
-# 将 _site/ 的内容部署到服务器
-# ...
+# 预览
+bundle exec jekyll serve
 ```
 
 ---
@@ -1636,7 +1657,7 @@ bundle exec jekyll build
 | `exclude` | array | - | 排除目录 |
 | `anchorjs` | boolean | `true` | 锚点链接 |
 | `markdown` | string | `kramdown` | Markdown引擎 |
-| `plugins` | array | `[jekyll-paginate]` | 插件 |
+| `plugins` | array | `[jekyll-paginate, jekyll-mentions, jekyll-feed, jekyll-sitemap]` | 插件 |
 | `disqus_username` | boolean/string | `false` | Disqus评论 |
 | `netease_comment` | boolean | `false` | 网易评论 |
 | `ga_track_id` | string | (注释) | GA追踪ID |

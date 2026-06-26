@@ -62,11 +62,5 @@ layout: default
 
 <!-- 复用 page 布局的 MathJax 支持（如需） -->
 {% if site.page-mathjax %}
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    TeX: { equationNumbers: { autoNumber: "AMS" } },
-    tex2jax: { inlineMath: [ ['$','$'] ], displayMath: [ ['$$','$$'] ], processEscapes: true }
-  });
-</script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  {% include mathjax_support.html %}
 {% endif %}
