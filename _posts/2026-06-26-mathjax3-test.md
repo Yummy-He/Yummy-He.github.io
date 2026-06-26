@@ -7,7 +7,7 @@ author: Yummy He
 header-img: img/home-bg.jpg
 mathjax: true
 tikzjax: true
-published: false
+published: true
 hidden: true
 tags:
   - Test
