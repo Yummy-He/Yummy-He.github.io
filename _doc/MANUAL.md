@@ -68,7 +68,7 @@
 - 归档页面（按年份 + 标签筛选）
 - 项目文档模块（Project）
 - PWA 离线访问 + 内容更新通知
-- 数学公式支持（MathJax）
+- 数学公式支持（MathJax 3，SVG 渲染）
 - 代码一键复制按钮
 - 多语言支持框架
 - Disqus / 网易云跟帖 评论系统
@@ -345,7 +345,9 @@ service-worker: true                # 是否启用 Service Worker（离线访问
 page-mathjax: false                 # 全局数学公式开关。true=所有页面加载MathJax
 ```
 
-**说明**：这是全局开关。单篇文章可以通过 Front Matter 中的 `mathjax: true` 单独启用。若大量文章需要公式，可将此项设为 `true`。
+**说明**：这是 `layout: page` 用于首页/归档等列表页的公式渲染开关（默认关闭，避免无公式页面加载额外 JS）。单篇文章通过 Front Matter 中的 `mathjax: true` 启用（作用于 `layout: post`）。
+
+> 一般保持 `false`，只在需要公式的文章中单独启用即可。
 
 ### 3.14 友情链接设置
 
@@ -650,7 +652,7 @@ default.html  （最基础布局，HTML骨架）
 | `friends.html` | 友情链接列表 |
 | `search.html` | 搜索弹出层 HTML 结构 |
 | `ads.html` | Google AdSense 广告单元 |
-| `mathjax_support.html` | MathJax 2.7.5 配置（SVG渲染器） |
+| `mathjax_support.html` | MathJax 3 配置（SVG渲染，含分隔符、缩放、mhchem） |
 | `multilingual-sel.html` | 中英文语言切换下拉框 |
 | `about/zh.md` | 关于页中文内容 |
 | `about/en.md` | 关于页英文内容（空文件） |
@@ -1064,17 +1066,11 @@ ba_track_id: "your-baidu-id"      # 取消注释并填入你的百度统计ID
 
 ---
 
-## 14. 数学公式（MathJax）
+## 14. 数学公式（MathJax 3）
 
-### 14.1 全局启用
+本站使用 **MathJax 3** 提供 LaTeX 数学公式渲染，输出格式为 SVG。
 
-```yaml
-page-mathjax: true    # _config.yml 中设为 true
-```
-
-这会在所有使用 `layout: page` 的页面加载 MathJax。
-
-### 14.2 单篇文章启用
+### 14.1 单篇文章启用
 
 在文章的 Front Matter 中设置：
 
@@ -1082,33 +1078,125 @@ page-mathjax: true    # _config.yml 中设为 true
 mathjax: true
 ```
 
-这仅在该文章页加载 MathJax（针对 `layout: post` 的页面）。
+这会在该文章页底部加载 MathJax 脚本（`_includes/mathjax_support.html`）。
+
+### 14.2 全站启用（列表页）
+
+```yaml
+# _config.yml
+page-mathjax: true
+```
+
+这会让首页、归档页等使用 `layout: page` 的页面也加载 MathJax。一般不需要开启，因为列表页通常只显示摘要，公式在正文页才展开。
 
 ### 14.3 公式语法
 
-MathJax 配置使用标准 LaTeX 分隔符：
-- 行内公式：`$ ... $`
-- 块级公式：`$$ ... $$`
+支持标准 LaTeX 数学语法，两种分隔符写法均可：
 
-**注意**：Markdown 中的 `_` 会与 LaTeX 的下标语法冲突。在公式中使用 `_` 时，确保公式不被错误解析。
+| 类型 | 写法一 | 写法二 | 说明 |
+|------|--------|--------|------|
+| 行内公式 | `$E = mc^2$` | `\(E = mc^2\)` | 与正文混排 |
+| 块级公式 | `$$E = mc^2$$` | `\[E = mc^2\]` | 独立居中显示 |
 
-### 14.4 配置详情
+**关于分隔符的选择**：
+- 用 `$...$` / `$$...$$` 写起来更简洁
+- kramdown 会将 `$$...$$` 自动转换为 `\[...\]` 输出，最终由 MathJax 的 `\[...\]` 配置渲染
+- 两种写法效果完全相同，写 `$$` 即可，无需关心转换细节
 
-```javascript
-MathJax.Hub.Config({
-    TeX: {
-        equationNumbers: { autoNumber: "AMS" }
-    },
-    SVG: { scale: 90 },
-    tex2jax: {
-        inlineMath: [ ['$','$'] ],
-        displayMath: [ ['$$','$$'] ],
-        processEscapes: true,
-    }
-});
+> **注意**：公式中不要有空格，如 `$ E = mc^2 $`（前后空格）会导致无法识别。
+
+### 14.4 常用公式示例
+
+**行内公式**：
+```latex
+质能方程 $E = mc^2$ 是爱因斯坦提出的。
+勾股定理 $a^2 + b^2 = c^2$ 是几何学的基础。
 ```
 
-使用 SVG 渲染器（`TeX-AMS-MML_SVG`），缩放比例 90%。
+**块级公式（带编号）**：
+```latex
+$$
+\nabla \cdot \mathbf{E} = \frac{\rho}{\varepsilon_0}
+\tag{1}
+$$
+```
+
+**多行对齐**：
+```latex
+$$
+\begin{aligned}
+\nabla \cdot \mathbf{E} &= \frac{\rho}{\varepsilon_0} \\
+\nabla \cdot \mathbf{B} &= 0
+\end{aligned}
+$$
+```
+
+**矩阵**：
+```latex
+$$
+\mathbf{A} = \begin{pmatrix}
+a_{11} & a_{12} \\
+a_{21} & a_{22}
+\end{pmatrix}
+$$
+```
+
+**化学方程式（mhchem）**：
+```latex
+$$
+\ce{^{2}H} + \ce{^{3}H} \to \ce{^{4}He} + n + 17.6\,\text{MeV}
+$$
+```
+
+### 14.5 实现原理
+
+MathJax 3 通过浏览器端 JavaScript 渲染，工作流程：
+
+```
+Markdown 源码           kramdown 处理              HTML 输出               MathJax 3 渲染
+──────────────────────────────────────────────────────────────────────────────────
+$E = mc^2$          →    不转换                →   $E = mc^2$           →   SVG 公式
+$$E = mc^2$$        →    转换为 \[...\]         →   \[E = mc^2\]         →   SVG 公式
+```
+
+配置文件位于 [_includes/mathjax_support.html](/_includes/mathjax_support.html)：
+
+```javascript
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    tags: 'ams'              // 支持 \tag{} 编号
+  },
+  svg: {
+    fontCache: 'global',
+    scale: 0.9               // 90% 缩放
+  },
+  options: {
+    menuOptions: {
+      settings: {
+        assistiveMml: false  // 禁用辅助 MathML，避免 retry 错误
+      }
+    }
+  }
+};
+```
+
+关键设计决策：
+- **同时支持 `$` 和 `\(\)` 分隔符**：兼容 kramdown 自动转换 `$$` → `\[` 的行为，避免块级公式无法渲染
+- **异步加载**：`<script async>` 不阻塞页面，公式按需渲染
+- **SVG 输出**：相比 CHTML 更清晰，缩放不失真
+- **CDN 加载**：使用 jsDelivr CDN（`mathjax@3/es5/tex-svg.js`），无需本地托管
+
+### 14.6 故障排查
+
+| 症状 | 可能原因 | 解决 |
+|------|----------|------|
+| 公式显示为原始 `$...$` 文本 | 未设置 `mathjax: true` | 检查文章 Front Matter |
+| 块级公式显示为 `\[...\]` 文本 | MathJax 配置缺少 `\[` 分隔符 | 确认 `_includes/mathjax_support.html` 中 `displayMath` 包含 `['\\[', '\\]']` |
+| 控制台报 "MathJax retry" 错误 | mhchem 等扩展动态加载失败 | 检查 `options.menuOptions.settings.assistiveMml` 是否为 `false` |
+| 公式渲染但样式异常 | CSS 冲突 | 检查主题样式是否覆盖了 MathJax SVG |
+| 化学式 `\ce` 不渲染 | mhchem 扩展未加载 | mhchem 已内置在 tex-svg.js 中，`\ce` 自动触发加载 |
 
 ---
 
@@ -1501,8 +1589,10 @@ bundle exec jekyll build
 
 **排查**：
 1. 文章 Front Matter 中 `mathjax: true` 是否已设置？
-2. 使用 `$$` 时是否与 Markdown 语法冲突？（下划线 `_` 可能导致错误解析）
-3. MathJax CDN 是否可访问？
+2. 块级公式是否被 kramdown 转换为 `\[...\]`？（查看页面源代码确认）MathJax 3 配置中是否包含 `['\\[', '\\]']` 分隔符？
+3. 浏览器控制台是否有 MathJax 相关报错？（常见：assistiveMml 导致的 retry 错误）
+4. MathJax CDN（jsDelivr）是否可访问？
+5. 公式中 `$` 前后是否有空格？（`$ E=mc^2 $` 带空格无法识别）
 
 ### 24.6 Service Worker 问题
 
