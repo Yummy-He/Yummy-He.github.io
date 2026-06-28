@@ -2085,10 +2085,94 @@ bundle exec jekyll serve
 | `---` | 水平分隔线 |
 | `{:target="_blank"}` | 链接新窗口打开 |
 
+### 25.5 表格用法
+
+#### 25.5.1 基本表格
+
+GTM 模式下使用管道语法创建表格，默认**单元格文字居中**：
+
+```markdown
+| 姓名   | 分数 | 排名 |
+|--------|------|------|
+| 张三   | 95   | 1    |
+| 李四   | 87   | 2    |
+{: .table}
+```
+
+`{: .table}` 是 kramdown 的 IAL（Inline Attribute List），给表格添加 Bootstrap `table` 类。
+
+#### 25.5.2 列对齐控制
+
+在分隔行中使用冒号控制每一列的对齐方式，会覆盖 CSS 默认居中的设置：
+
+| 符号 | 对齐方式 |
+|------|----------|
+| `:-----` | 左对齐 |
+| `:----:` | 居中 |
+| `-----:` | 右对齐 |
+
+**示例**：
+
+```markdown
+| 左对齐 | 居中 | 右对齐 |
+|:-------|:----:|-------:|
+| 文字   | 文字 | 100    |
+| abc    | abc  | 50     |
+{: .table}
+```
+
+#### 25.5.3 特殊单元格控制
+
+Markdown 管道表格的单元格内容是纯文本，**不能嵌套 HTML 标签**（会被转义）。如需指定某个单元格/行的特殊对齐、跨列等，需用纯 HTML 表格：
+
+```html
+<table class="table">
+  <thead>
+    <tr>
+      <th>默认居中</th>
+      <th>默认居中</th>
+      <th>默认居中</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>正常格</td>
+      <td style="text-align: left">左对齐格</td>
+      <td style="text-align: right">右对齐格</td>
+    </tr>
+    <tr>
+      <td colspan="2" style="text-align: left">跨两列左对齐</td>
+      <td>末列</td>
+    </tr>
+  </tbody>
+</table>
+```
+
+#### 25.5.4 表格横向滚动
+
+在移动端或窄视口下，超宽表格会出现横向滚动条（与代码块行为一致）。桌面端鼠标悬停时滚轮自动转为横向滚动。详见 [14.8 节](#148-移动端适配与溢出处理)。
+
+#### 25.5.5 实现原理
+
+表格文字居中通过 CSS 实现（`less/yummy-blog.less`），编译后作用于所有 `table.table` 的 `th`、`td`：
+
+```less
+table.table > tbody,
+table.table > thead {
+  th,
+  td {
+    border: 1px solid #eee !important;
+    text-align: center;
+  }
+}
+```
+
+kramdown 列对齐（`:---:` 语法）会生成 inline style（如 `style="text-align: left"`），优先级高于 CSS，因此能覆盖默认居中。
+
 ---
 
 > **文档维护说明**：本文档覆盖了 Yummy Blog v1.8.2 的所有功能和配置。如有新增功能或参数变更，请同步更新本文档。
 >
 > 本文档生成于 2026-06-18。
 >
-> 最后更新：2026-06-28（新增 header-focus-x/y 头图焦点定位功能；新增副标题多行换行功能；强化样式构建系统规范：禁止直接修改 CSS，必须通过 LESS + Grunt 编译；新增 14.8 移动端溢出适配、滚轮横向滚动功能）。
+> 最后更新：2026-06-28（新增 header-focus-x/y 头图焦点定位功能；新增副标题多行换行功能；强化样式构建系统规范：禁止直接修改 CSS，必须通过 LESS + Grunt 编译；新增 14.8 移动端溢出适配、滚轮横向滚动功能；新增 25.5 表格用法：默认居中、kramdown 列对齐、特殊单元格 HTML 控制）。
