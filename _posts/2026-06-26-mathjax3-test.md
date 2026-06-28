@@ -1,7 +1,10 @@
 ---
 layout: post
 title: MathJax 3 公式渲染测试
-subtitle: 验证升级后的数学公式功能
+subtitle: |
+  第一行文字
+  第二行文字
+  第三行文字
 date: 2026-06-26
 author: Yummy He
 header-img: img/home-bg.jpg

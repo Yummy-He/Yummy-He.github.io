@@ -1256,6 +1256,7 @@ samp {
   display: block;
   font-weight: 300;
   margin: 10px 0 0;
+  white-space: pre-line;
 }
 @media only screen and (min-width: 768px) {
   .intro-header .site-heading h1,
@@ -1284,6 +1285,7 @@ samp {
   font-weight: normal;
   margin: 10px 0 30px;
   margin-top: -5px;
+  white-space: pre-line;
 }
 .intro-header .post-heading .meta {
   /* Hux learn from

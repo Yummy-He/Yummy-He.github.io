@@ -395,7 +395,7 @@ key: value
 
 | 参数 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
-| `subtitle` | string | (空) | 文章副标题，显示在标题下方 |
+| `subtitle` | string | (空) | 文章副标题，显示在标题下方。支持 YAML `\|` 多行换行 |
 | `author` | string | `site.title` | 文章作者 |
 | `header-img` | string | `site.header-img` | 文章头图路径（相对于项目根目录） |
 | `header-style` | string | (默认图) | `"text"` = 纯文字标题（无背景图） |
@@ -422,7 +422,9 @@ key: value
 ---
 layout:     post
 title:      "我的文章标题"
-subtitle:   "文章副标题"
+subtitle: |
+  第一行内容
+  第二行内容
 date:       2026-05-06 12:00:00
 author:     "何尹铭"
 header-img: "img/post-bg/post-bg-example.jpg"
@@ -682,7 +684,7 @@ rake post title="文章标题" subtitle="文章副标题"
 | 参数 | 说明 | 默认值 |
 |------|------|--------|
 | `title=` | 文章标题（必填） | `"new-post"` |
-| `subtitle=` | 文章副标题 | `"This is a subtitle"` |
+| `subtitle=` | 文章副标题（支持 `\|` 多行） | `"This is a subtitle"` |
 | `date=` | 发布日期，格式 YYYY-MM-DD | 当天日期 |
 
 **示例**：
@@ -754,6 +756,23 @@ def hello():
 ```
 
 > 更多 Markdown 语法请参考 [kramdown 文档](https://kramdown.gettalong.org/syntax.html)
+```
+
+### 7.2.1 副标题多行换行
+
+文章的 `subtitle` 参数支持多行文本，使用 YAML 的字面量块标量 `|` 语法：
+
+```yaml
+subtitle: |
+  第一行内容
+  第二行内容
+  第三行内容
+```
+
+每行独立显示，行间无空行。底层通过 CSS `white-space: pre-line` 实现，保留了手动换行但会折叠多余空格。单行文本仍可照常用：
+
+```yaml
+subtitle: "这是一个单行副标题"
 ```
 
 ### 7.3 文章头图管理
@@ -1686,7 +1705,7 @@ npx grunt watch
 
 ### 19.6 自定义样式
 
-修改 LESS 源文件后，运行 `npx grunt` 重新构建。或者直接修改 `css/yummy-blog.css`（不推荐，会被覆盖）。
+**重要：永远不要直接修改 `css/` 目录下的文件。** 所有样式修改必须通过 LESS 源文件进行，然后运行 `npx grunt less`（或 `npx grunt`）重新编译生成 CSS。直接修改 CSS 会在下次编译时被覆盖，且会导致源文件与编译输出不一致。
 
 ---
 
@@ -1886,9 +1905,10 @@ bundle exec jekyll serve
 ### 24.4 样式不生效
 
 **排查**：
-1. 修改了 LESS 文件后是否运行了 `npx grunt`？
-2. 浏览器缓存是否已清除？（Ctrl+Shift+R 强制刷新）
-3. CSS 文件路径是否正确？（检查 `<link>` 标签）
+1. 修改了 LESS 文件后是否运行了 `npx grunt less` 或 `npx grunt`？
+2. 是否错误地直接修改了 `css/` 目录下的文件？必须通过 LESS 编译生成 CSS
+3. 浏览器缓存是否已清除？（Ctrl+Shift+R 强制刷新）
+4. CSS 文件路径是否正确？（检查 `<link>` 标签）
 
 ### 24.5 数学公式不渲染
 
@@ -2035,4 +2055,4 @@ bundle exec jekyll serve
 >
 > 本文档生成于 2026-06-18。
 >
-> 最后更新：2026-06-28（新增 14.8 移动端溢出适配、滚轮横向滚动功能）。
+> 最后更新：2026-06-28（新增副标题多行换行功能；强化样式构建系统规范：禁止直接修改 CSS，必须通过 LESS + Grunt 编译；新增 14.8 移动端溢出适配、滚轮横向滚动功能）。
