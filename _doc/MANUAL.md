@@ -415,6 +415,8 @@ key: value
 | `plchart` | boolean | `false` | 是否嵌入外部图表 iframe |
 | `description` | string | (空) | 页面描述，用于SEO和搜索 |
 | `header-bg-css` | string | (空) | 头部背景CSS（如渐变等）|
+| `header-focus-x` | number | `50` | 头图水平焦点百分比（0~100），0=左边缘，100=右边缘 |
+| `header-focus-y` | number | `50` | 头图垂直焦点百分比（0~100），0=上边缘，100=下边缘 |
 
 #### 4.2.3 文章 Front Matter 完整示例
 
@@ -428,6 +430,8 @@ subtitle: |
 date:       2026-05-06 12:00:00
 author:     "何尹铭"
 header-img: "img/post-bg/post-bg-example.jpg"
+header-focus-x: 50
+header-focus-y: 30
 header-mask: 0.3
 header-style: text
 tags:
@@ -623,6 +627,7 @@ default.html  （最基础布局，HTML骨架）
 - `site.header-img` — 全局默认头图（`img/home-bg.jpg`）
 - `page.header-mask` — 黑色蒙版透明度（如 `0.3`）
 - `page.header-style: text` — 纯文字模式，不用头图背景
+- `page.header-focus-x` / `page.header-focus-y` — 图片焦点百分比（0~100），`cover` 裁剪时优先保留焦点区域，避免主体被裁掉
 - `page.header-img-credit` — 图片署名
 
 ### 6.5 sns-links.html — 社交链接
@@ -727,6 +732,8 @@ subtitle:   "副标题（可选）"
 date:       2026-05-06 12:00:00
 author:     "何尹铭"
 header-img: "img/post-bg/post-bg-2025.jpg"
+header-focus-x: 50
+header-focus-y: 50
 header-mask: 0.3
 tags:
     - 标签1
@@ -777,6 +784,8 @@ subtitle: "这是一个单行副标题"
 
 ### 7.3 文章头图管理
 
+#### 7.3.1 头图文件位置
+
 文章头图放在 `img/post-bg/` 目录中：
 
 ```text
@@ -791,6 +800,30 @@ img/post-bg/
 ```yaml
 header-img: "img/post-bg/post-bg-myblog.jpg"
 ```
+
+#### 7.3.2 头图焦点定位
+
+头图使用 `background-size: cover`，会随窗口宽度自动裁剪。如果图片主体不在正中，需要通过 `header-focus-x` / `header-focus-y` 指定焦点位置（0~100 的百分比），确保 `cover` 裁剪时优先保留主体区域：
+
+```yaml
+header-img: "img/post-bg/post-bg-example.jpg"
+header-focus-x: 70   # 焦点在图片水平 70% 处（从左起算）
+header-focus-y: 25   # 焦点在图片垂直 25% 处（从上起算）
+```
+
+默认值均为 50（居中），不设则保持原有行为。
+
+#### 7.3.3 焦点选取工具
+
+`tools/focus-picker.html` 是一个可视化工具，可快速获取焦点百分比：
+
+1. 启动 Jekyll 本地服务器：`bundle exec jekyll serve`
+2. 浏览器打开 `http://localhost:4000/tools/focus-picker.html`
+3. 拖入头图文件（或点击选择）
+4. 在图片上点击主体位置
+5. 点击"复制 YAML"粘贴到文章 Front Matter 中
+
+> **VSCode Remote 用户**：Jekyll serve 启动后，VSCode 会自动转发端口 4000，直接在本地浏览器打开上述地址即可。
 
 ### 7.4 文章中插入图片
 
@@ -2016,6 +2049,9 @@ bundle exec jekyll serve
 | `nav-style` | string | 否 | 默认 | `"invert"` = 导航反色 |
 | `plchart` | boolean | 否 | `false` | 嵌入图表 |
 | `description` | string | 否 | (空) | 页面描述 |
+| `header-focus-x` | number | 否 | `50` | 头图水平焦点% |
+| `header-focus-y` | number | 否 | `50` | 头图垂直焦点% |
+| `header-bg-css` | string | 否 | (空) | 头部背景CSS |
 
 ### 25.3 项目文档 Front Matter 参数
 
@@ -2055,4 +2091,4 @@ bundle exec jekyll serve
 >
 > 本文档生成于 2026-06-18。
 >
-> 最后更新：2026-06-28（新增副标题多行换行功能；强化样式构建系统规范：禁止直接修改 CSS，必须通过 LESS + Grunt 编译；新增 14.8 移动端溢出适配、滚轮横向滚动功能）。
+> 最后更新：2026-06-28（新增 header-focus-x/y 头图焦点定位功能；新增副标题多行换行功能；强化样式构建系统规范：禁止直接修改 CSS，必须通过 LESS + Grunt 编译；新增 14.8 移动端溢出适配、滚轮横向滚动功能）。

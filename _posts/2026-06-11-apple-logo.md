@@ -1,11 +1,15 @@
 ---
 layout:     post
 title:      "用纯几何构造 Apple Logo"
-subtitle:   "从单位圆到蒂姆·库克的最后一声 Good Morning ——13 段圆弧的精确生成与 TikZ 渲染"
+subtitle:   |
+  从单位圆到蒂姆·库克的最后一声 Good Morning
+  —— 13 段圆弧的精确生成与 TikZ 渲染
 date:       2026-06-11 8:00:00
 author:     "何尹铭"
 header-img: "img/post-bg/post-bg-apple.png"
 header-mask: 0.3
+header-focus-x: 73   # 图片主体在水平 73% 处
+header-focus-y: 30   # 图片主体在垂直 30% 处
 mathjax: true
 tikzjax: true
 tags:

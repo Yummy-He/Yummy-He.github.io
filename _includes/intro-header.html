@@ -9,6 +9,9 @@
         position: relative;
         background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}');
         background: {{ page.header-bg-css }};
+        {% if page.header-focus-x or page.header-focus-y %}
+        background-position: {{ page.header-focus-x | default: 50 }}% {{ page.header-focus-y | default: 50 }}%;
+        {% endif %}
     }
 
     {% if page.header-mask %}
@@ -94,7 +97,7 @@
 {% endif %}
 
 {% if include.type == 'page' %}
-<header class="intro-header" style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')">
+<header class="intro-header" style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}'){% if page.header-focus-x or page.header-focus-y %}; background-position: {{ page.header-focus-x | default: 50 }}% {{ page.header-focus-y | default: 50 }}%{% endif %}">
   <div class="header-mask"></div>
   <div class="container">
     <div class="row">
