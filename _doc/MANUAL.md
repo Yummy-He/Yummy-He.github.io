@@ -2128,7 +2128,7 @@ bundle exec jekyll serve
 
 #### 25.5.1 基本表格
 
-GTM 模式下使用管道语法创建表格，默认**单元格文字居中**：
+GTM 模式下使用管道语法创建表格：
 
 ```markdown
 | 姓名   | 分数 | 排名 |
@@ -2142,10 +2142,10 @@ GTM 模式下使用管道语法创建表格，默认**单元格文字居中**：
 
 #### 25.5.2 列对齐控制
 
-在分隔行中使用冒号控制每一列的对齐方式，会覆盖 CSS 默认居中的设置：
+在分隔行中使用冒号控制每一列的对齐方式。**推荐使用 `:---:` 让所有列居中**：
 
 | 符号 | 对齐方式 |
-|------|----------|
+|:------:|:----------:|
 | `:-----` | 左对齐 |
 | `:----:` | 居中 |
 | `-----:` | 右对齐 |
@@ -2153,10 +2153,10 @@ GTM 模式下使用管道语法创建表格，默认**单元格文字居中**：
 **示例**：
 
 ```markdown
-| 左对齐 | 居中 | 右对齐 |
-|:-------|:----:|-------:|
-| 文字   | 文字 | 100    |
-| abc    | abc  | 50     |
+| 姓名   | 分数 | 排名 |
+|:--------:|:------:|:------:|
+| 张三   | 95   | 1    |
+| 李四   | 87   | 2    |
 {: .table}
 ```
 
@@ -2168,9 +2168,9 @@ Markdown 管道表格的单元格内容是纯文本，**不能嵌套 HTML 标签
 <table class="table">
   <thead>
     <tr>
-      <th>默认居中</th>
-      <th>默认居中</th>
-      <th>默认居中</th>
+      <th>居中</th>
+      <th>居中</th>
+      <th>居中</th>
     </tr>
   </thead>
   <tbody>
@@ -2193,7 +2193,9 @@ Markdown 管道表格的单元格内容是纯文本，**不能嵌套 HTML 标签
 
 #### 25.5.5 实现原理
 
-表格文字居中通过 CSS 实现（`less/yummy-blog.less`），编译后作用于所有 `table.table` 的 `th`、`td`：
+表格对齐通过 kramdown 列对齐语法（`:---:` 等）实现，kramdown 会生成 inline style（如 `style="text-align: center"`）作用于对应列的 `th`、`td`。
+
+CSS 层只提供表格边框（`less/yummy-blog.less`）：
 
 ```less
 table.table > tbody,
@@ -2201,12 +2203,9 @@ table.table > thead {
   th,
   td {
     border: 1px solid #eee !important;
-    text-align: center;
   }
 }
 ```
-
-kramdown 列对齐（`:---:` 语法）会生成 inline style（如 `style="text-align: left"`），优先级高于 CSS，因此能覆盖默认居中。
 
 ---
 
@@ -2214,4 +2213,4 @@ kramdown 列对齐（`:---:` 语法）会生成 inline style（如 `style="text-
 >
 > 本文档生成于 2026-06-18。
 >
-> 最后更新：2026-06-28（新增 header-focus-x/y 头图焦点定位功能；新增副标题多行换行功能；强化样式构建系统规范：禁止直接修改 CSS，必须通过 LESS + Grunt 编译；新增 14.8 移动端溢出适配、滚轮横向滚动功能；新增 25.5 表格用法：默认居中、kramdown 列对齐、特殊单元格 HTML 控制；修复 FEATURED TAGS 实现：用 where_exp 计数替代有问题的 group_by，正确合并文章+项目标签，修正 featured-condition-size 严格大于的语义说明）。
+> 最后更新：2026-06-28（新增 header-focus-x/y 头图焦点定位功能；新增副标题多行换行功能；强化样式构建系统规范：禁止直接修改 CSS，必须通过 LESS + Grunt 编译；新增 14.8 移动端溢出适配、滚轮横向滚动功能；新增 25.5 表格用法：kramdown 列对齐 `:---:` 居中、特殊单元格 HTML 控制；修复 FEATURED TAGS 实现：用 where_exp 计数替代有问题的 group_by，正确合并文章+项目标签，修正 featured-condition-size 严格大于的语义说明）。
