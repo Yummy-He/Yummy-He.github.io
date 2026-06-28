@@ -974,13 +974,8 @@ samp {
   margin-top: 20px;
 }
 .post-container .pager li {
-  width: 48%;
-}
-.post-container .pager li.next {
-  float: right;
-}
-.post-container .pager li.previous {
-  float: left;
+  flex: 0 0 48%;
+  width: auto;
 }
 .post-container .pager li > a {
   width: 100%;
@@ -989,6 +984,10 @@ samp {
   color: #a3a3a3;
   font-weight: normal;
   letter-spacing: 0.5px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 .post-container .anchorjs-link {
   position: absolute;
@@ -1485,8 +1484,14 @@ footer .copyright a:focus {
   color: white;
 }
 .pager {
+  display: flex;
+  justify-content: space-between;
   margin: 20px 0 0 !important;
   padding: 0px !important;
+}
+.pager li {
+  flex: 0 0 48%;
+  width: auto;
 }
 .pager li > a,
 .pager li > span {
@@ -1512,6 +1517,8 @@ footer .copyright a:focus {
   }
 }
 .pager li > a {
+  display: block;
+  height: 100%;
   color: #404040;
 }
 .pager li > a:hover,

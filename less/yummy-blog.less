@@ -287,19 +287,18 @@ samp {
   }
   // V1.6 Hux display title by default.
   .pager li {
-    width: 48%;
-    &.next {
-      float: right;
-    }
-    &.previous {
-      float: left;
-    }
+    flex: 0 0 48%;
+    width: auto;
     > a {
       width: 100%;
       > span {
         color: @brand-gray;
         font-weight: normal;
         letter-spacing: 0.5px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
       }
     }
   }
@@ -810,10 +809,14 @@ footer {
 // Pager Styling
 
 .pager {
+  display: flex;
+  justify-content: space-between;
   margin: 20px 0 0 !important;
   padding: 0px !important;
 
   li {
+    flex: 0 0 48%;
+    width: auto;
     > a,
     > span {
       .sans-serif;
@@ -831,6 +834,8 @@ footer {
     }
 
     > a {
+      display: block;
+      height: 100%;
       color: @gray-dark;
     }
     > a:hover,
