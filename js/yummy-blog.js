@@ -237,3 +237,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+// Wheel-to-horizontal-scroll: 鼠标悬停在横向可滚动区域时，滚轮转为左右滚动
+(function() {
+  'use strict';
+  var SCROLLABLE_SELECTORS = 'pre, .table-responsive, mjx-container[display="true"]';
+
+  document.addEventListener('wheel', function(e) {
+    var el = e.target.closest(SCROLLABLE_SELECTORS);
+    if (!el) return;
+
+    // 没有横向溢出则不拦截
+    if (el.scrollWidth <= el.clientWidth) return;
+
+    var delta = e.deltaY;
+    // 忽略纯水平滚轮事件 (Shift+滚轮)
+    if (Math.abs(delta) < 1) return;
+
+    el.scrollLeft += delta;
+    e.preventDefault();
+  }, { passive: false });
+})();

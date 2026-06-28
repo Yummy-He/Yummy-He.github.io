@@ -1,8 +1,3 @@
-/*!
- * Yummy Blog v1.8.2 (http://Yummy-He.github.io)
- * Copyright 2026 Yummy <yummy@example.com>
- */
-
 @font-face {
   font-family: "MapleMono";
   src: url("../fonts/MapleMono-CN-Regular.woff2") format("woff2");
@@ -1772,9 +1767,19 @@ img::-moz-selection {
 .page-fullscreen footer .copyright a:hover {
   color: #ddd;
 }
-.MathJax_SVG_Display {
-  overflow: auto;
+mjx-container[display="true"] {
+  overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+}
+.tikzjax-container {
+  max-width: 100%;
+}
+svg.tikzjax {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1em auto;
+  overflow: visible;
 }
 .no-scroll {
   overflow-y: hidden;

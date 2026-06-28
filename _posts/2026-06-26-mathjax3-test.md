@@ -25,7 +25,7 @@ $$P(A \mid B) = \frac{P(B \mid A) \, P(A)}{P(B)}$$
 
 傅里叶变换：
 
-$$F(\omega) = \int_{-\infty}^{\infty} f(x) \, e^{-i 2\pi \omega x} \, dx$$
+$$F(\omega) = \int_{-\infty}^{\infty} f(x) \, e^{-i 2\pi \omega x} \, dx F(\omega) = \int_{-\infty}^{\infty} f(x) \, e^{-i 2\pi \omega x} \, dx F(\omega) = \int_{-\infty}^{\infty} f(x) \, e^{-i 2\pi \omega x} \, dx F(\omega) = \int_{-\infty}^{\infty} f(x) \, e^{-i 2\pi \omega x} \, dx F(\omega) = \int_{-\infty}^{\infty} f(x) \, e^{-i 2\pi \omega x} \, dx$$
 
 ## 带编号的公式
 

@@ -1128,10 +1128,22 @@ img::-moz-selection {
   color: #ddd;
 }
 
-// MathJax Overflow
-.MathJax_SVG_Display {
-  overflow: auto;
+// MathJax 3 / TeX Overflow - horizontally scrollable on mobile like code blocks
+mjx-container[display="true"] {
+  overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+// TikZJax scaling - scale SVG to fit page width
+.tikzjax-container {
+  max-width: 100%;
+}
+svg.tikzjax {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1em auto;
+  overflow: visible;
 }
 
 .no-scroll {

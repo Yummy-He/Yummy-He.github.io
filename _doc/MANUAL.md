@@ -1196,6 +1196,7 @@ MathJax = {
 - **异步加载**：`<script async>` 不阻塞页面，公式按需渲染
 - **SVG 输出**：相比 CHTML 更清晰，缩放不失真
 - **CDN 加载**：使用 jsDelivr CDN（`mathjax@3/es5/tex-svg.js`），无需本地托管
+- **溢出处理**：`mjx-container[display="true"]` 设置 `overflow-x: auto`，超宽公式出现横向滚动条（定义于 `less/yummy-blog.less`）
 
 ### 14.6 故障排查
 
@@ -1314,7 +1315,8 @@ assets/tikzjax/
 
 | 类名 | 说明 |
 |------|------|
-| `.tikzjax-container` | `overflow: visible` |
+| `.tikzjax-container` | `max-width: 100%; overflow: visible` |
+| `svg.tikzjax` | `max-width: 100%; height: auto; display: block; margin: 1em auto` — SVG 等比缩放至页面宽度 |
 | `.tikzjax-scaled-container` | `width: 100%; height: 100%` |
 
 #### 14.7.7 故障排查
@@ -1327,6 +1329,159 @@ assets/tikzjax/
 | LuaLaTeX 报错 | 使用了不支持的宏包 | 检查 14.7.5 节可用列表 |
 | 字体不正确 | fonts.css 文件丢失 | 检查浏览器 Network 面板，确认 `assets/tikzjax/fonts.css` 可访问 |
 | 首次加载慢 | tex.wasm 下载 + WASM 初始化 | 首次 ~500ms，后续 IndexedDB 缓存即时 |
+
+#### 14.7.8 响应式行为
+
+TikZ SVG 图形在移动端或窄视口下会自动等比缩放至页面宽度（`max-width: 100%; height: auto`），无需手动设置。
+
+### 14.8 移动端适配与溢出处理
+
+在移动端或窄视口下，长公式和宽图形可能超出页面宽度。本博客提供两套处理策略：
+
+| 内容类型 | 溢出处理 | 桌面端交互 |
+|---------|---------|-----------|
+| TeX 块级公式 (`$$...$$`) | 横向滚动条，与代码块一致 | 鼠标悬停时滚轮自动转为横向滚动 |
+| TikZ 图形 | CSS 等比缩放至页面宽度 | 始终保持完整可见，无需滚动 |
+| 代码块 / 表格 | 横向滚动条 | 鼠标悬停时滚轮自动转为横向滚动 |
+
+> **滚轮横向滚动**：当鼠标位于代码块、表格或 TeX 公式区域时，滚轮的纵向滚动会自动转为横向滚动（不再同时滚动页面）。将鼠标移出该区域即可恢复页面纵向滚动。此功能仅在桌面端生效（`js/yummy-blog.js` 中实现）。
+
+#### 14.8.1 如何避免 TeX 公式超出宽度
+
+最好的解决方案是在**书写阶段**就让公式适配窄宽度，而不是依赖滚动条。
+
+**方法一：使用多行环境拆分长公式**
+
+| 环境 | 对齐方式 | 适用场景 |
+|------|---------|---------|
+| `aligned` | `&` 处对齐 | 多行公式，指定对齐点 |
+| `multline` | 首行左、末行右、中间居中 | 超长公式无法对齐拆分 |
+| `split` | 类似 `aligned`，支持编号 | 需要整体编号的多行公式 |
+| `gathered` | 多行居中 | 无需对齐的多行公式 |
+
+**对比示例**：
+
+不推荐的写法（单行过长，移动端需滚动）：
+
+```latex
+$$
+B(\omega) = \int_{-\infty}^{\infty} f(x) e^{-i 2\pi \omega x} dx = \int_{-\infty}^{\infty} f(x) e^{-i 2\pi \omega x} dx = \int_{-\infty}^{\infty} f(x) e^{-i 2\pi \omega x} dx
+$$
+```
+
+推荐写法（用 `aligned` 拆分为多行）：
+
+```latex
+$$
+\begin{aligned}
+B(\omega) &= \int_{-\infty}^{\infty} f(x) e^{-i 2\pi \omega x} dx \\
+          &= \int_{-\infty}^{\infty} f(x) e^{-i 2\pi \omega x} dx \\
+          &= \int_{-\infty}^{\infty} f(x) e^{-i 2\pi \omega x} dx
+\end{aligned}
+$$
+```
+
+**方法二：使用 `multline` 拆分超长单行公式**：
+
+```latex
+$$
+\begin{multline}
+f(x) = a_0 + a_1 x + a_2 x^2 + a_3 x^3 + a_4 x^4 \\
+     + a_5 x^5 + a_6 x^6 + a_7 x^7 + a_8 x^8 + \cdots
+\end{multline}
+$$
+```
+
+**方法三：缩小长矩阵的列间距**：
+
+```latex
+$$
+\setlength{\arraycolsep}{3pt}
+\begin{pmatrix}
+a_{11} & a_{12} & a_{13} & a_{14} & a_{15} \\
+a_{21} & a_{22} & a_{23} & a_{24} & a_{25}
+\end{pmatrix}
+$$
+```
+
+**方法四：行内公式改为块级公式**：
+
+```markdown
+<!-- 不推荐：行内超长公式 -->
+文中有一长公式 $a + b + c + d + e + f + g + h + i + j + k$ 混在文字中。
+
+<!-- 推荐：改为块级公式，独立一行 -->
+文中有一长公式：
+$$
+a + b + c + d + e + f + g + h + i + j + k
+$$
+在文字之外展示。
+```
+
+> **原则**：行内公式应尽量简短。超过 20 个字符的公式建议改为块级公式。
+
+#### 14.8.2 如何避免 TikZ 图形超出宽度
+
+TikZ 图形已具备自动缩放能力（`svg.tikzjax` 设置了 `max-width: 100%`），但过度缩放会导致文字过小难以阅读。更好的做法是在绘制时就控制好尺寸。
+
+**方法一：在 tikzpicture 中使用 `scale` 参数**
+
+```latex
+\begin{tikzpicture}[scale=0.8]
+  \draw[->] (0,0) -- (10,0);
+  \draw[->] (0,0) -- (0,10);
+\end{tikzpicture}
+```
+
+**方法二：pgfplots 中使用相对宽度**
+
+```latex
+\begin{tikzpicture}
+  \begin{axis}[
+    width=\linewidth,      % 使用相对宽度，替代如 width=12cm
+    height=0.6\linewidth,
+    xlabel={$x$},
+    ylabel={$f(x)$}]
+    \addplot[blue, thick] {sin(deg(x))};
+  \end{axis}
+\end{tikzpicture}
+```
+
+> **重要**：`\linewidth` 会随容器宽度自动调整。避免使用 `width=15cm` 等绝对尺寸，在移动端会导致图形超出视口。
+
+**方法三：使用 `\resizebox` 包裹 TikZ 代码（最后手段）**
+
+当 TikZ 代码无法修改（如从外部工具导出）时，可包裹一层缩放：
+
+```latex
+\resizebox{\linewidth}{!}{
+  \begin{tikzpicture}
+    % 不可修改的 TikZ 代码
+  \end{tikzpicture}
+}
+```
+
+> **注意**：TikZJax 对 `\resizebox` 的支持取决于所使用的 TeX 宏包，可能不完全兼容。优先使用方法一或方法二。
+
+**方法四：调整节点文字大小**
+
+```latex
+\begin{tikzpicture}[
+  every node/.style={font=\footnotesize},  % 全局缩小字体
+  scale=0.9]
+  % ... TikZ 代码
+\end{tikzpicture}
+```
+
+**尺寸建议**：
+
+| 场景 | 推荐最大宽度 | 说明 |
+|------|------------|------|
+| 桌面端（>768px） | `\linewidth` (~700px) | 在正文区域完整显示 |
+| 平板端（768px） | `\linewidth` (~700px) | 自动适配 |
+| 手机端（<500px） | 自动缩放 | CSS `max-width: 100%` 兜底 |
+
+> **经验法则**：在 `tikzpicture` 中，将坐标范围控制在约 10cm 以内，线条粗细和字体大小适中，一般都能在移动端良好显示。
 
 ---
 
@@ -1743,6 +1898,7 @@ bundle exec jekyll serve
 3. 浏览器控制台是否有 MathJax 相关报错？（常见：assistiveMml 导致的 retry 错误）
 4. MathJax CDN（jsDelivr）是否可访问？
 5. 公式中 `$` 前后是否有空格？（`$ E=mc^2 $` 带空格无法识别）
+6. 如果公式在移动端仍超宽，参考 [14.8.1 节](#1481-如何避免-tex-公式超出宽度) 拆分长公式为多行
 
 ### 24.6 TikZ 图形不渲染
 
@@ -1754,6 +1910,7 @@ bundle exec jekyll serve
 5. 是否使用了不被支持的宏包或 TikZ 库？（参考可用列表）
 6. `<script>` 标签的 `type` 属性是否为 `"text/tikz"`？
 7. 节点文本是否包含中文或其他非拉丁字符？TikZJax 使用的 Computer Modern 字体不含 CJK 字形，TeX 编译会失败。节点文本应使用英文或数学模式（如 `$f(x)$`）。
+8. 图形在移动端显示过小难以阅读？参考 [14.8.2 节](#1482-如何避免-tikz-图形超出宽度)，在绘制时使用 `\linewidth` 等相对宽度而非绝对尺寸
 
 ### 24.7 Service Worker 问题
 
@@ -1877,3 +2034,5 @@ bundle exec jekyll serve
 > **文档维护说明**：本文档覆盖了 Yummy Blog v1.8.2 的所有功能和配置。如有新增功能或参数变更，请同步更新本文档。
 >
 > 本文档生成于 2026-06-18。
+>
+> 最后更新：2026-06-28（新增 14.8 移动端溢出适配、滚轮横向滚动功能）。
