@@ -30,7 +30,7 @@ layout: default
               </h2>
               {% if project.subtitle %}
               <h3 class="post-subtitle">
-                  {{ project.subtitle }}
+                  {{ project.subtitle | strip }}
               </h3>
               {% endif %}
           </a>

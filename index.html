@@ -11,7 +11,7 @@ description: "「浮云一别后，流水十年间。」"
         </h2>
         {% if post.subtitle %}
         <h3 class="post-subtitle">
-            {{ post.subtitle }}
+            {{ post.subtitle | strip }}
         </h3>
         {% endif %}
         {% if post.content-preview %}
