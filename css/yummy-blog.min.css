@@ -1802,6 +1802,16 @@ img::-moz-selection {
 .page-fullscreen footer .copyright a:hover {
   color: #ddd;
 }
+.table-responsive,
+mjx-container[display="true"],
+pre {
+  scrollbar-width: thin;
+}
+.table-responsive::-webkit-scrollbar,
+mjx-container[display="true"]::-webkit-scrollbar,
+pre::-webkit-scrollbar {
+  height: 4px;
+}
 mjx-container[display="true"] {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;

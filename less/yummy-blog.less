@@ -1136,6 +1136,16 @@ img::-moz-selection {
   color: #ddd;
 }
 
+// Thin scrollbars for horizontally scrollable content
+.table-responsive,
+mjx-container[display="true"],
+pre {
+  scrollbar-width: thin;
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+}
+
 // MathJax 3 / TeX Overflow - horizontally scrollable on mobile like code blocks
 mjx-container[display="true"] {
   overflow-x: auto;
