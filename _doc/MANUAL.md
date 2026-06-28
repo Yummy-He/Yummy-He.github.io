@@ -332,10 +332,10 @@ sidebar-avatar: https://github.com/Yummy-He.png
 
 ```yaml
 featured-tags: true                 # 是否启用特色标签功能
-featured-condition-size: 1          # 标签数量超过此值的标签会被标记为"特色标签"
+featured-condition-size: 1          # 标签关联的文章+项目数量 *严格大于* 此值的标签才会显示
 ```
 
-**行为**：标签关联的文章+项目数量大于 `featured-condition-size` 时，该标签会显示在侧边栏的 "FEATURED TAGS" 区域。当前值为 1，即所有标签都是特色标签。
+**行为**：收集所有可见文章（排除 `hidden: true`）和项目页面（`layout: project-item`，排除 `hidden: true` 和 `published: false`）的标签，按标签名分组统计出现次数。数量严格大于 `featured-condition-size` 的标签会显示在侧边栏的 "FEATURED TAGS" 区域。当前值为 1，即需要关联至少 2 篇文章/项目才会显示。
 
 ### 3.12 PWA 设置
 
@@ -652,11 +652,14 @@ default.html  （最基础布局，HTML骨架）
 
 显示在侧边栏和文章页底部。逻辑：
 
-1. 收集所有已发布文章和项目的标签
-2. 按标签分组，统计每个标签的出现次数
-3. 数量 > `site.featured-condition-size` 的标签才会显示
-4. 按标签数量降序排列（数量多的在前）
-5. 点击标签跳转到归档页并自动筛选
+1. 筛选可见内容——文章排除 `hidden: true`，项目页面（`layout: project-item`）排除 `hidden: true` 和 `published: false`
+2. 将所有标签收集到分隔字符串，`split` 成数组后 `uniq` 去重
+3. 对每个 unique 标签用 `where_exp` 精确匹配计数
+4. 数量严格大于 `site.featured-condition-size` 的标签才会显示
+5. 按标签数量降序排列（数量多的在前）
+6. 点击标签跳转到归档页并自动筛选
+
+实现细节：利用 `||` 作为标签分隔符收集到 `capture` 字符串中，去重和计数通过 `where_exp` 完成（避免 `group_by` 无法处理字符串数组的问题）。排序沿用 `data-sort` + `__SEPARATOR__` split/sort 技巧，保证数量多的标签靠前。
 
 ### 6.7 其他 includes
 
@@ -974,17 +977,21 @@ tags:
 
 ```yaml
 featured-tags: true
-featured-condition-size: 1    # 数量超过1的标签即为特色标签（当前所有标签都是）
+featured-condition-size: 1    # 数量严格大于 1（即 ≥2）的标签才会显示
 ```
+
+当前值为 1，即需要标签关联至少 2 篇文章/项目才能在侧边栏中显示。例如 "LaTeX" 标签关联了 1 篇文章 + 2 个项目（共 3），"笔记" 关联了 2 个项目，因此这两个标签出现在 FEATURED TAGS 中。
 
 **调整建议**：如果标签很多，可以设为 `3`，则只有被 3 篇以上文章/项目关联的标签才会在侧边栏中显示。
 
 ### 9.3 标签的排序逻辑
 
 特色标签按关联数量降序排列。排序算法：
-- 计算 `total_items - tag_size` 作为排序值
+
+- 计算 `total_items - tag_count` 作为排序值
 - 值越小（即标签关联内容越多）越靠前
-- 用字符串排序实现（利用了 4 位数补零的技巧）
+- 用 `data-sort` 属性 + `__SEPARATOR__` 分隔符 + `split`/`sort` 实现字符串排序
+- `tag_count` 通过 `where_exp` 对标签数组精确匹配计数得到
 
 ---
 
@@ -2049,7 +2056,7 @@ bundle exec jekyll serve
 | `sidebar-about-description` | string | - | 个人简介 |
 | `sidebar-avatar` | string | - | 头像URL |
 | `featured-tags` | boolean | `true` | 特色标签 |
-| `featured-condition-size` | int | `1` | 标签阈值 |
+| `featured-condition-size` | int | `1` | 标签阈值（严格大于） |
 | `chrome-tab-theme-color` | string | `"#000000"` | Chrome标签色 |
 | `service-worker` | boolean | `true` | PWA开关 |
 | `page-mathjax` | boolean | `false` | 全站MathJax |
@@ -2207,4 +2214,4 @@ kramdown 列对齐（`:---:` 语法）会生成 inline style（如 `style="text-
 >
 > 本文档生成于 2026-06-18。
 >
-> 最后更新：2026-06-28（新增 header-focus-x/y 头图焦点定位功能；新增副标题多行换行功能；强化样式构建系统规范：禁止直接修改 CSS，必须通过 LESS + Grunt 编译；新增 14.8 移动端溢出适配、滚轮横向滚动功能；新增 25.5 表格用法：默认居中、kramdown 列对齐、特殊单元格 HTML 控制）。
+> 最后更新：2026-06-28（新增 header-focus-x/y 头图焦点定位功能；新增副标题多行换行功能；强化样式构建系统规范：禁止直接修改 CSS，必须通过 LESS + Grunt 编译；新增 14.8 移动端溢出适配、滚轮横向滚动功能；新增 25.5 表格用法：默认居中、kramdown 列对齐、特殊单元格 HTML 控制；修复 FEATURED TAGS 实现：用 where_exp 计数替代有问题的 group_by，正确合并文章+项目标签，修正 featured-condition-size 严格大于的语义说明）。
