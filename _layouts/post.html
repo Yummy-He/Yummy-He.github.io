@@ -28,20 +28,38 @@ layout: default
 				{{ content }}
 
                 <hr style="visibility: hidden;">
+                {% assign visible_posts = site.posts | where_exp: "post", "post.hidden != true" %}
+                {% comment %} ----- 在可见文章中定位当前页 ----- {% endcomment %}
+                {% for post in visible_posts %}
+                    {% if post.url == page.url %}
+                        {% assign curr_index = forloop.index0 %}
+                    {% endif %}
+                {% endfor %}
+                {% comment %} ----- 取出前后篇 (site.posts 最新在前，+1=更早/prev，-1=更新/next) ----- {% endcomment %}
+                {% assign prev_index = curr_index | plus: 1 %}
+                {% assign next_index = curr_index | minus: 1 %}
+                {% for post in visible_posts %}
+                    {% if forloop.index0 == prev_index %}
+                        {% assign prev_post = post %}
+                    {% endif %}
+                    {% if forloop.index0 == next_index %}
+                        {% assign next_post = post %}
+                    {% endif %}
+                {% endfor %}
                 <ul class="pager">
-                    {% if page.previous.url %}
+                    {% if prev_post.url %}
                     <li class="previous">
-                        <a href="{{ page.previous.url | prepend: site.baseurl | replace: '//', '/' }}" data-toggle="tooltip" data-placement="top" title="{{page.previous.title}}">
+                        <a href="{{ prev_post.url | prepend: site.baseurl | replace: '//', '/' }}" data-toggle="tooltip" data-placement="top" title="{{prev_post.title}}">
                         Previous<br>
-                        <span>{{page.previous.title}}</span>
+                        <span>{{prev_post.title}}</span>
                         </a>
                     </li>
                     {% endif %}
-                    {% if page.next.url %}
+                    {% if next_post.url %}
                     <li class="next">
-                        <a href="{{ page.next.url | prepend: site.baseurl | replace: '//', '/' }}" data-toggle="tooltip" data-placement="top" title="{{page.next.title}}">
+                        <a href="{{ next_post.url | prepend: site.baseurl | replace: '//', '/' }}" data-toggle="tooltip" data-placement="top" title="{{next_post.title}}">
                         Next<br>
-                        <span>{{page.next.title}}</span>
+                        <span>{{next_post.title}}</span>
                         </a>
                     </li>
                     {% endif %}
