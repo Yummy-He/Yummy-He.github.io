@@ -1740,6 +1740,38 @@ npx grunt watch
 
 **重要：永远不要直接修改 `css/` 目录下的文件。** 所有样式修改必须通过 LESS 源文件进行，然后运行 `npx grunt less`（或 `npx grunt`）重新编译生成 CSS。直接修改 CSS 会在下次编译时被覆盖，且会导致源文件与编译输出不一致。
 
+#### 19.6.1 调整首页卡片标题-副标题间距
+
+预览卡片的标题与副标题间距由 `.post-title` 的 `margin-bottom` 控制。**注意：存在两处规则**，分别在移动端和桌面端生效：
+
+| 目标 | LESS 位置 | 选择器 | 说明 |
+|------|----------|--------|------|
+| 移动端 (<768px) | `less/yummy-blog.less` ~684行 | `.post-preview > a > .post-title` | 基类规则 |
+| 桌面端 (>=768px) | `less/yummy-blog.less` ~715行 | `@media` 内 `.post-preview > a > .post-title` | 响应式覆盖基类 |
+
+修改后运行 `npx grunt less` 编译。
+
+**历史记录**：当前两处均设为 `margin-bottom: 20px`（2026-06-28）。
+
+**模板换行注意事项**：副标题 `<h3 class="post-subtitle">` 使用了 `white-space: pre-line` 来支持多行。如果 {% raw %}`{{ post.subtitle }}`{% endraw %} 写在 `<h3>` 的单独一行，HTML 标签换行会被 `pre-line` 解析为空行，造成额外间距。正确的写法是把 Liquid 标签与 `<h3>` 写在同一行：
+
+```html
+<!-- 正确：无多余空行 -->
+<h3 class="post-subtitle">{{ post.subtitle | strip }}</h3>
+
+<!-- 错误：pre-line 会在首尾各产生一个空行 -->
+<h3 class="post-subtitle">
+    {{ post.subtitle }}
+</h3>
+```
+
+涉及的模板文件：
+- `index.html`（首页列表）
+- `archive.html`（归档页，两处）
+- `_layouts/project.html`（项目列表）
+
+`| strip` 过滤器去除 YAML `|` 多行字符串的尾部换行符。
+
 ---
 
 ## 20. Rake 任务
