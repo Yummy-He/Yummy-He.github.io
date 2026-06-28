@@ -7,7 +7,12 @@
 .side-catalog {
   &.fixed {
     position: fixed;
-    top: -21px;
+    max-height: 85vh;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
   }
   &.fold {
     .catalog-toggle::before {
@@ -88,6 +93,25 @@
   }
 }
 
+// 目录截断文字悬停提示
+.catalog-tooltip {
+  position: fixed;
+  z-index: 9999;
+  padding: 4px 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: @gray-dark;
+  background: #fff;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  &.show {
+    opacity: 1;
+  }
+}
 @media (max-width: 1200px) {
   .side-catalog {
     display: none;

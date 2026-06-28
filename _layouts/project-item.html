@@ -48,20 +48,42 @@ layout: default
                 {{ content }}
 
                 <hr style="visibility: hidden;">
+                {% assign projects = site.pages
+                    | where: "layout", "project-item"
+                    | where_exp: "item", "item.hidden != true"
+                    | where_exp: "item", "item.published != false"
+                    | sort: "date" | reverse %}
+                {% comment %} ----- 在可见项目中定位当前页 ----- {% endcomment %}
+                {% for p in projects %}
+                    {% if p.url == page.url %}
+                        {% assign curr_index = forloop.index0 %}
+                    {% endif %}
+                {% endfor %}
+                {% comment %} ----- 取出前后篇 (projects 最新在前，+1=更早/prev，-1=更新/next) ----- {% endcomment %}
+                {% assign prev_index = curr_index | plus: 1 %}
+                {% assign next_index = curr_index | minus: 1 %}
+                {% for p in projects %}
+                    {% if forloop.index0 == prev_index %}
+                        {% assign prev_page = p %}
+                    {% endif %}
+                    {% if forloop.index0 == next_index %}
+                        {% assign next_page = p %}
+                    {% endif %}
+                {% endfor %}
                 <ul class="pager">
-                    {% if page.previous.url %}
+                    {% if prev_page.url %}
                     <li class="previous">
-                        <a href="{{ page.previous.url | prepend: site.baseurl | replace: '//', '/' }}" title="{{page.previous.title}}">
+                        <a href="{{ prev_page.url | prepend: site.baseurl | replace: '//', '/' }}" title="{{prev_page.title}}">
                         Previous<br>
-                        <span>{{page.previous.title}}</span>
+                        <span>{{prev_page.title}}</span>
                         </a>
                     </li>
                     {% endif %}
-                    {% if page.next.url %}
+                    {% if next_page.url %}
                     <li class="next">
-                        <a href="{{ page.next.url | prepend: site.baseurl | replace: '//', '/' }}" title="{{page.next.title}}">
+                        <a href="{{ next_page.url | prepend: site.baseurl | replace: '//', '/' }}" title="{{next_page.title}}">
                         Next<br>
-                        <span>{{page.next.title}}</span>
+                        <span>{{next_page.title}}</span>
                         </a>
                     </li>
                     {% endif %}

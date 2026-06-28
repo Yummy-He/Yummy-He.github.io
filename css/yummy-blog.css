@@ -1,3 +1,8 @@
+/*!
+ * Yummy Blog v1.8.2 (http://Yummy-He.github.io)
+ * Copyright 2026 Yummy <yummy@example.com>
+ */
+
 @font-face {
   font-family: "MapleMono";
   src: url("../fonts/MapleMono-CN-Regular.woff2") format("woff2");
@@ -88,7 +93,12 @@
 }
 .side-catalog.fixed {
   position: fixed;
-  top: -21px;
+  max-height: 85vh;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.side-catalog.fixed::-webkit-scrollbar {
+  width: 4px;
 }
 .side-catalog.fold .catalog-toggle::before {
   content: "+";
@@ -158,6 +168,24 @@
 }
 .side-catalog .catalog-body .active a {
   color: #FF6347 !important;
+}
+.catalog-tooltip {
+  position: fixed;
+  z-index: 9999;
+  padding: 4px 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #404040;
+  background: #fff;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.catalog-tooltip.show {
+  opacity: 1;
 }
 @media (max-width: 1200px) {
   .side-catalog {

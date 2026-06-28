@@ -49,34 +49,36 @@ jQuery(document).ready(function($) {
     //primary navigation slide-in effect
     if ($(window).width() > MQL) {
         var headerHeight = $('.navbar-custom').height(),
-            bannerHeight  = $('.intro-header .container').height();     
+            catalogNaturalTop = $('.side-catalog').offset().top;
         $(window).on('scroll', {
                 previousTop: 0
             },
             function() {
                 var currentTop = $(window).scrollTop(),
-                    $catalog = $('.side-catalog');
+                    $catalog = $('.side-catalog'),
+                    $navbar = $('.navbar-custom');
 
                 //check if user is scrolling up by mouse or keyborad
                 if (currentTop < this.previousTop) {
                     //if scrolling up...
-                    if (currentTop > 0 && $('.navbar-custom').hasClass('is-fixed')) {
-                        $('.navbar-custom').addClass('is-visible');
+                    if (currentTop > 0 && $navbar.hasClass('is-fixed')) {
+                        $navbar.addClass('is-visible');
                     } else {
-                        $('.navbar-custom').removeClass('is-visible is-fixed');
+                        $navbar.removeClass('is-visible is-fixed');
                     }
                 } else {
                     //if scrolling down...
-                    $('.navbar-custom').removeClass('is-visible');
-                    if (currentTop > headerHeight && !$('.navbar-custom').hasClass('is-fixed')) $('.navbar-custom').addClass('is-fixed');
+                    $navbar.removeClass('is-visible');
+                    if (currentTop > headerHeight && !$navbar.hasClass('is-fixed')) $navbar.addClass('is-fixed');
                 }
                 this.previousTop = currentTop;
 
 
                 //adjust the appearance of side-catalog
                 $catalog.show()
-                if (currentTop > (bannerHeight + 41)) {
+                if (currentTop > catalogNaturalTop - $navbar.height()) {
                     $catalog.addClass('fixed')
+                    $catalog.css('top', $navbar.height());
                 } else {
                     $catalog.removeClass('fixed')
                 }

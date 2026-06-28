@@ -179,7 +179,7 @@
             n = $(this).prop('tagName').toLowerCase();
             i = "#" + $(this).prop('id');
             t = $(this).text();
-            c = $('<a href="' + i + '" rel="nofollow">' + t + '</a>');
+            c = $('<a href="' + i + '" rel="nofollow"></a>').text(t);
             l = $('<li class="' + n + '_nav"></li>').append(c);
             $(selector).append(l);
         });
@@ -187,6 +187,23 @@
     }
 
     generateCatalog(".catalog-body");
+
+    // 只在文字被截断的目录项上显示自定义悬停提示
+    (function() {
+        var $tip = $('<div class="catalog-tooltip"></div>').appendTo('body');
+        $('.catalog-body a').each(function() {
+            if (this.scrollWidth <= this.clientWidth) return;
+            var $link = $(this);
+            var text = this.textContent;
+            $link.on('mouseenter', function(e) {
+                $tip.text(text).addClass('show');
+            }).on('mousemove', function(e) {
+                $tip.css({ left: e.clientX + 12, top: e.clientY + 12 });
+            }).on('mouseleave', function() {
+                $tip.removeClass('show');
+            });
+        });
+    })();
 
     // toggle side catalog
     $(".catalog-toggle").click((function (e) {
