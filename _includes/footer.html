@@ -298,20 +298,31 @@
     function htmlDecode(input) {
         var e = document.createElement('textarea');
         e.innerHTML = input;
-        // handle case of empty input
         return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+    }
+
+    // Load search data synchronously so SimpleJekyllSearch gets object references
+    var _searchData = null;
+    var _fulltextEnabled = false;
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/search.json', false);
+    try {
+        xhr.send();
+        if (xhr.status === 200) {
+            _searchData = JSON.parse(xhr.responseText);
+        }
+    } catch(e) {
+        console.error('Failed to load search.json:', e);
     }
 
     SimpleJekyllSearch({
         searchInput: document.getElementById('search-input'),
         resultsContainer: document.getElementById('search-results'),
-        json: '/search.json',
+        json: _searchData || '/search.json',
         searchResultTemplate: '<div class="post-preview item"><a href="{url}"><h2 class="post-title">{title}</h2><h3 class="post-subtitle">{subtitle}</h3><hr></a></div>',
         noResultsText: 'No results',
         limit: 50,
         fuzzy: false,
-        // a hack to get escaped subtitle unescaped. for some reason, 
-        // post.subtitle w/o escape filter nuke entire search.
         templateMiddleware: function (prop, value, template) {
             if (prop === 'subtitle' || prop === 'title') {
                 if (value.indexOf("code")) {
@@ -323,29 +334,98 @@
         }
     });
 
-    $(document).ready(function () {
-        var $searchPage = $('.search-page');
-        var $searchOpen = $('.search-icon');
-        var $searchClose = $('.search-icon-close');
-        var $searchInput = $('#search-input');
-        var $body = $('body');
+    // Search open/close — vanilla JS, no jQuery dependency
+    (function() {
+        var searchPage = document.querySelector('.search-page');
+        var searchOpen = document.querySelector('.search-icon');
+        var searchClose = document.querySelector('.search-icon-close');
+        var searchInput = document.getElementById('search-input');
+        var toggle = document.getElementById('fulltext-toggle');
+        var body = document.body;
 
-        $searchOpen.on('click', function (e) {
+        if (!searchPage || !searchOpen) return;
+
+        function openSearch() {
+            searchPage.classList.add('search-active');
+            document.body.style.overflow = 'hidden';
+            if (searchInput) searchInput.focus();
+        }
+
+        function closeSearch() {
+            searchPage.classList.remove('search-active');
+            document.body.style.overflow = '';
+        }
+
+        // Open via navbar icon — use capture phase to beat any interfering handlers
+        searchOpen.addEventListener('click', function(e) {
             e.preventDefault();
-            $searchPage.toggleClass('search-active');
-            var prevClasses = $body.attr('class') || '';
-            setTimeout(function () {
-                $body.addClass('no-scroll');
-            }, 400)
+            e.stopPropagation();
+            if (searchPage.classList.contains('search-active')) {
+                closeSearch();
+            } else {
+                openSearch();
+            }
+        }, false);
 
-            if ($searchPage.hasClass('search-active')) {
-                $searchClose.on('click', function (e) {
-                    e.preventDefault();
-                    $searchPage.removeClass('search-active');
-                    $body.attr('class', prevClasses);  // from closure 
-                });
-                $searchInput.focus();
+        // Close button
+        if (searchClose) {
+            searchClose.addEventListener('click', function(e) {
+                e.preventDefault();
+                closeSearch();
+            });
+        }
+
+        // Click overlay background to close
+        searchPage.addEventListener('click', function(e) {
+            if (e.target === searchPage) {
+                closeSearch();
             }
         });
-    });
+
+        // ESC key to close
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && searchPage.classList.contains('search-active')) {
+                closeSearch();
+            }
+        });
+
+        // Full-text toggle
+        // Backup stored in separate array, NOT on the search objects themselves,
+        // because SimpleJekyllSearch iterates ALL enumerable properties.
+        var _contentBackup = [];
+        if (toggle && _searchData) {
+            // Initialize: checkbox starts unchecked, so move content to backup
+            for (var i = 0; i < _searchData.length; i++) {
+                if (_searchData[i].content) {
+                    _contentBackup[i] = _searchData[i].content;
+                    _searchData[i].content = '';
+                }
+            }
+
+            toggle.addEventListener('change', function() {
+                _fulltextEnabled = toggle.checked;
+                if (!_searchData) return;
+
+                if (_fulltextEnabled) {
+                    for (var i = 0; i < _searchData.length; i++) {
+                        if (_contentBackup[i] !== undefined) {
+                            _searchData[i].content = _contentBackup[i];
+                            _contentBackup[i] = undefined;
+                        }
+                    }
+                } else {
+                    for (var i = 0; i < _searchData.length; i++) {
+                        if (_searchData[i].content) {
+                            _contentBackup[i] = _searchData[i].content;
+                            _searchData[i].content = '';
+                        }
+                    }
+                }
+
+                if (searchInput) {
+                    searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+            });
+        }
+    })();
 </script>

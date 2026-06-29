@@ -599,9 +599,11 @@ button.paper-button {
   -ms-transform: translate(0, 100%);
   transform: translate(0, 100%);
   opacity: 0;
+  pointer-events: none;
 }
 .search-page.search-active {
   opacity: 1;
+  pointer-events: auto;
   -webkit-transform: translate(0, 0) scale(1, 1);
   -ms-transform: translate(0, 0) scale(1, 1);
   transform: translate(0, 0) scale(1, 1);
@@ -637,6 +639,7 @@ button.paper-button {
   padding: 0;
   margin: 0;
   width: 100%;
+  padding-right: 68px;
   font-size: 30px;
   font-weight: bold;
   color: #404040;
@@ -645,6 +648,61 @@ button.paper-button {
   .search-page #search-input {
     margin-left: 20px;
   }
+}
+.search-page .search-input-wrapper {
+  position: relative;
+}
+.search-page .search-full-toggle {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #bfbfbf;
+  cursor: pointer;
+  user-select: none;
+}
+.search-page .search-full-toggle .toggle-label {
+  font-family: "MapleMono", "Fira Code", Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+.search-page .search-full-toggle .toggle-switch {
+  display: inline-block;
+  cursor: pointer;
+  margin: 0;
+}
+.search-page .search-full-toggle input[type="checkbox"] {
+  display: none;
+}
+.search-page .search-full-toggle .toggle-slider {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  background: #ccc;
+  border-radius: 12px;
+  transition: background 0.2s;
+  vertical-align: middle;
+}
+.search-page .search-full-toggle .toggle-slider::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+.search-page .search-full-toggle input:checked + .toggle-slider {
+  background: #FF6347;
+}
+.search-page .search-full-toggle input:checked + .toggle-slider::before {
+  transform: translateX(20px);
 }
 .search-page #search-results {
   overflow: auto;

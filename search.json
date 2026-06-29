@@ -17,6 +17,7 @@ layout: null
         "title"    : {{ project.title | jsonify }},
         "subtitle" : {{ project.subtitle | default: "" | jsonify }},
         "tags"     : {{ project.tags | join: ', ' | jsonify }},
+        "content"  : {{ project.content | strip_html | truncate: 2000 | jsonify }},
         "url"      : "{{ site.baseurl }}{{ project.url }}",
         "date"     : ""
       }
@@ -33,6 +34,7 @@ layout: null
         "title"    : {{ post.title | jsonify }},
         "subtitle" : {{ post.subtitle | default: "" | jsonify }},
         "tags"     : {{ post.tags | join: ', ' | jsonify }},
+        "content"  : {{ post.content | strip_html | truncate: 2000 | jsonify }},
         "url"      : "{{ site.baseurl }}{{ post.url }}",
         "date"     : {{ post.date | date_to_xmlschema | jsonify }}
       }
