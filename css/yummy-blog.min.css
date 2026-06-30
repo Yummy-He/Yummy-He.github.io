@@ -890,6 +890,61 @@ select.sel-lang {
   min-height: 28px;
   font-size: 14px;
 }
+.lang-toggle {
+  display: inline-flex;
+  position: relative;
+  background: #e8e8e8;
+  border-radius: 16px;
+  width: 80px;
+  height: 30px;
+  cursor: pointer;
+  user-select: none;
+}
+.lang-toggle .lang-slider {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 38px;
+  height: 26px;
+  background: #FF6347;
+  border-radius: 14px;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 0;
+}
+.lang-toggle .lang-slider.right {
+  transform: translateX(38px);
+}
+.lang-toggle .lang-option {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  line-height: 30px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #999;
+  transition: color 0.25s;
+}
+.lang-toggle .lang-option.active {
+  color: #fff;
+}
+.side-lang {
+  display: block;
+  position: absolute;
+  visibility: hidden;
+}
+.side-lang.fixed {
+  position: fixed;
+  z-index: 100;
+}
+.side-lang.ready {
+  visibility: visible;
+}
+@media (max-width: 1199px) {
+  article.multilingual {
+    padding-top: 30px;
+  }
+}
 table {
   margin-top: 10px;
 }

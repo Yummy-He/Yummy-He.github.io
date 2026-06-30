@@ -1558,9 +1558,11 @@ multilingual: true
 
 1. 页面上方出现语言选择下拉框（`multilingual-sel.html`）
 2. URL 参数 `?lang=zh` 或 `?lang=en` 切换语言
-3. 中文内容放在 `<div class="zh post-container">` 中
-4. 英文内容放在 `<div class="en post-container">` 中
+3. 中文内容放在 `<div class="zh post-container" lang="zh" markdown="1">` 中
+4. 英文内容放在 `<div class="en post-container" lang="en" markdown="1">` 中
 5. 切换时页面刷新，JavaScript 根据 URL 参数显示/隐藏对应容器
+
+> **重要**：必须给 `<div>` 添加 `markdown="1"` 属性，否则 kramdown 不会解析 HTML 块元素内部的 Markdown 语法（`##` 标题、`**粗体**` 等都会原样输出）。
 
 ### 15.3 关于页的多语言
 

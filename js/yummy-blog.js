@@ -44,46 +44,85 @@ $(document).ready(function() {
 
 // Navigation Scripts to Show Header on Scroll-Up
 jQuery(document).ready(function($) {
-    var MQL = 1170;
+    var MQL = 1170,
+        $sideCatalog = $('.side-catalog'),
+        $sideLang = $('.side-lang'),
+        headerHeight = $('.navbar-custom').height(),
+        catalogNaturalTop,
+        langNaturalTop, langAbsTop, langAbsLeft;
 
-    //primary navigation slide-in effect
-    if ($(window).width() > MQL) {
-        var headerHeight = $('.navbar-custom').height(),
-            catalogNaturalTop = $('.side-catalog').offset().top;
-        $(window).on('scroll', {
-                previousTop: 0
-            },
-            function() {
-                var currentTop = $(window).scrollTop(),
-                    $catalog = $('.side-catalog'),
-                    $navbar = $('.navbar-custom');
-
-                //check if user is scrolling up by mouse or keyborad
-                if (currentTop < this.previousTop) {
-                    //if scrolling up...
-                    if (currentTop > 0 && $navbar.hasClass('is-fixed')) {
-                        $navbar.addClass('is-visible');
-                    } else {
-                        $navbar.removeClass('is-visible is-fixed');
-                    }
-                } else {
-                    //if scrolling down...
-                    $navbar.removeClass('is-visible');
-                    if (currentTop > headerHeight && !$navbar.hasClass('is-fixed')) $navbar.addClass('is-fixed');
-                }
-                this.previousTop = currentTop;
-
-
-                //adjust the appearance of side-catalog
-                $catalog.show()
-                if (currentTop > catalogNaturalTop - $navbar.height()) {
-                    $catalog.addClass('fixed')
-                    $catalog.css('top', $navbar.height());
-                } else {
-                    $catalog.removeClass('fixed')
-                }
-            });
+    if ($sideCatalog.length) {
+        catalogNaturalTop = $sideCatalog.offset().top;
     }
+
+    // position side-lang (wide: left of post; narrow: inside post top-left)
+    if ($sideLang.length) {
+        function positionSideLang() {
+            var $post = $('.post-container');
+            if (!$post.length) return;
+            var postOffset = $post.offset();
+            $sideLang.removeClass('fixed ready');
+
+            if ($(window).width() > MQL) {
+                langAbsLeft = postOffset.left - $sideLang.outerWidth() - 40;
+                langAbsTop = postOffset.top + 70;
+            } else {
+                langAbsLeft = postOffset.left + 40;
+                langAbsTop = postOffset.top - 40;
+            }
+            $sideLang.css({ top: langAbsTop, left: langAbsLeft })
+                .addClass('ready');
+            langNaturalTop = $sideLang.offset().top;
+        }
+        positionSideLang();
+        $(window).on('resize', positionSideLang);
+    }
+
+    // unified scroll handler
+    $(window).on('scroll', { previousTop: 0 }, function() {
+        var currentTop = $(window).scrollTop(),
+            $navbar = $('.navbar-custom'),
+            isWide = $(window).width() > MQL;
+
+        // navbar show/hide
+        if (currentTop < this.previousTop) {
+            if (currentTop > 0 && $navbar.hasClass('is-fixed')) {
+                $navbar.addClass('is-visible');
+            } else {
+                $navbar.removeClass('is-visible is-fixed');
+            }
+        } else {
+            $navbar.removeClass('is-visible');
+            if (currentTop > headerHeight && !$navbar.hasClass('is-fixed')) {
+                $navbar.addClass('is-fixed');
+            }
+        }
+        this.previousTop = currentTop;
+
+        // side-catalog (wide only)
+        if ($sideCatalog.length && isWide) {
+            $sideCatalog.show();
+            if (currentTop > catalogNaturalTop - $navbar.height()) {
+                $sideCatalog.addClass('fixed').css('top', $navbar.height());
+            } else {
+                $sideCatalog.removeClass('fixed');
+            }
+        }
+
+        // side-lang (always, following its own natural top)
+        if ($sideLang.length) {
+            if (currentTop > langNaturalTop - $navbar.height()) {
+                if (!$sideLang.hasClass('fixed')) {
+                    $sideLang.addClass('fixed').css('top', $navbar.height());
+                }
+            } else {
+                if ($sideLang.hasClass('fixed')) {
+                    $sideLang.removeClass('fixed')
+                        .css('top', langAbsTop);
+                }
+            }
+        }
+    });
 });
 
 // document.addEventListener('DOMContentLoaded', () => {
