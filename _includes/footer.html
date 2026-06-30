@@ -253,7 +253,9 @@
     function setLang(newLang) {
         var params = new URLSearchParams(document.location.search)
         params.set("lang", newLang)
-        document.location.search = params.toString()  // refresh.
+        var newUrl = window.location.pathname + '?' + params.toString() + window.location.hash
+        history.replaceState(null, '', newUrl)
+        _render()
     }
 
     // handle render
@@ -282,11 +284,18 @@
         generateCatalog(".catalog-body");
     }
 
-    // handle toggle click
-    $options.forEach(function(opt) {
-        opt.addEventListener("click", function() {
-            setLang(this.dataset.lang);
-        });
+    // handle toggle click: asymmetric hit area (70% toward the "other" side)
+    document.getElementById("lang-toggle").addEventListener("click", function(e) {
+        var rect = this.getBoundingClientRect();
+        var ratio = (e.clientX - rect.left) / rect.width;
+        var current = getLang() || "zh";
+        if (current === "zh") {
+            // right 70% switches to EN, left 30% stays ZH
+            setLang(ratio > 0.3 ? "en" : "zh");
+        } else {
+            // left 70% switches to ZH, right 30% stays EN
+            setLang(ratio < 0.7 ? "zh" : "en");
+        }
     });
 
     // init

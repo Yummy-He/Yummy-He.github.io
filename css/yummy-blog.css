@@ -908,7 +908,7 @@ select.sel-lang {
   height: 26px;
   background: #FF6347;
   border-radius: 14px;
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 0;
 }
 .lang-toggle .lang-slider.right {
@@ -923,7 +923,7 @@ select.sel-lang {
   font-size: 12px;
   font-weight: 700;
   color: #999;
-  transition: color 0.25s;
+  transition: color 200ms;
 }
 .lang-toggle .lang-option.active {
   color: #fff;

@@ -24,7 +24,7 @@ tags:
 
 这批样本采集自杰泽罗陨石坑边缘一处名为"蛇纹石急流"（Serpentine Rapids）的区域。科学家利用火星车搭载的 **SHERLOC** 光谱仪（用拉曼光谱与荧光扫描宜居环境中的有机物与化学物质），在岩石中识别出了包含**羧酸类、芳香族化合物**在内的多种有机分子。
 
-&gt; "这并非首次在火星上发现有机物，但这次发现的分子种类之丰富、信号之清晰，令人振奋。" —— 项目科学家 Ken Farley 教授
+> "这并非首次在火星上发现有机物，但这次发现的分子种类之丰富、信号之清晰，令人振奋。" —— 项目科学家 Ken Farley 教授
 
 这些有机分子的存在有多种可能的解释：
 - 可能来源于远古火星的**生物活动**
@@ -64,7 +64,7 @@ NASA's **Perseverance** rover has detected a variety of **complex organic molecu
 
 The samples were collected from an area called "Serpentine Rapids" at the edge of Jezero Crater. Using the rover's onboard **SHERLOC** spectrometer (Scanning Habitable Environments with Raman &amp; Luminescence for Organics &amp; Chemicals), scientists identified multiple organic molecules including **carboxylic acids** and **aromatic compounds**.
 
-&gt; "This is not the first time organics have been found on Mars, but the richness of molecular species and the clarity of the signals this time is truly exciting." — Professor Ken Farley, Project Scientist
+> "This is not the first time organics have been found on Mars, but the richness of molecular species and the clarity of the signals this time is truly exciting." — Professor Ken Farley, Project Scientist
 
 The presence of these organic molecules has several possible explanations:
 - They could originate from **biological activity** on ancient Mars
