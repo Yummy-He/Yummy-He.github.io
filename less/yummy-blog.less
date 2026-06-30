@@ -891,6 +891,12 @@ footer {
   li {
     flex: 0 0 48%;
     width: auto;
+    &.previous:only-child {
+      margin-right: auto;
+    }
+    &.next:only-child {
+      margin-left: auto;
+    }
     > a,
     > span {
       .sans-serif;

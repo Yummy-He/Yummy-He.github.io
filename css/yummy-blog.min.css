@@ -1610,6 +1610,12 @@ footer .copyright a:focus {
   flex: 0 0 48%;
   width: auto;
 }
+.pager li.previous:only-child {
+  margin-right: auto;
+}
+.pager li.next:only-child {
+  margin-left: auto;
+}
 .pager li > a,
 .pager li > span {
   /* Hux learn from
