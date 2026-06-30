@@ -196,6 +196,13 @@ select {
   }
 }
 
+// Page layout (e.g., about page) may need a different vertical offset.
+// Tweak the number below in px — negative = move up, positive = move down.
+article.page-layout .side-lang.ready,
+article.page-layout .side-lang.fixed {
+  transform: translateY(20px);
+}
+
 // Narrow screen: extra header-article gap for bilingual pages
 @media (max-width: 1199px) {
   article.multilingual {

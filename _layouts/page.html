@@ -6,13 +6,19 @@ layout: default
 {% include intro-header.html type='page' %}
 
 <!-- Main Content -->
-<div class="container">
+<article{% if page.multilingual %} class="multilingual page-layout"{% endif %}>
+    {% if page.multilingual %}
+    <aside class="side-lang" aria-label="Language switcher">
+        {% include multilingual-sel.html %}
+    </aside>
+    {% endif %}
+    <div class="container">
   <div class="row">
     {% if site.sidebar == false %}
     <!-- NO SIDEBAR -->
     <!-- PostList Container -->
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1
-      postlist-container">
+      {% if page.multilingual %}post-container{% else %}postlist-container{% endif %}">
       {{ content }}
     </div>
     <!-- Sidebar Container -->
@@ -29,7 +35,7 @@ layout: default
     <!-- USE SIDEBAR -->
     <!-- PostList Container -->
     <div class="col-lg-8 col-lg-offset-1 col-md-8 col-md-offset-1 col-sm-12
-      col-xs-12 postlist-container">
+      col-xs-12 {% if page.multilingual %}post-container{% else %}postlist-container{% endif %}">
       {{ content }}
     </div>
     <!-- Sidebar Container -->
@@ -50,6 +56,7 @@ layout: default
     {% endif %}
   </div>
 </div>
+</article>
 
 {% if site.page-mathjax %}
 <script>

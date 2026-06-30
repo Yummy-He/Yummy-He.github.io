@@ -940,6 +940,10 @@ select.sel-lang {
 .side-lang.ready {
   visibility: visible;
 }
+article.page-layout .side-lang.ready,
+article.page-layout .side-lang.fixed {
+  transform: translateY(20px);
+}
 @media (max-width: 1199px) {
   article.multilingual {
     padding-top: 30px;
