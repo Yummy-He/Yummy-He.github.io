@@ -5,7 +5,7 @@ subtitle:   "以吉林大学 WebVPN 为例，将任意网址一键转换为校�
 date:       2026-07-26 12:00:00
 author:     "何尹铭"
 header-img: "img/post-bg/post-bg-20260726.jpg"
-header-mask: 0.7
+header-mask: 0.2
 tags:
     - 安全
     - 网络
