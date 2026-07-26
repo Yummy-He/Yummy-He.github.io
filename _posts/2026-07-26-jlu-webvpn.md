@@ -31,7 +31,8 @@ VPN 把原始域名替换成了一串 hex 字符串，路径部分保持不变�
 | 资源 | 地址 |
 |------|------|
 | 网页演示 | [Yummy-He.github.io/JLU-WebVPN](https://Yummy-He.github.io/JLU-WebVPN) |
-| 使用教程 | [JLU-WebVPN 使用教程](tutorial) |
+| 项目主页 | [JLU-WebVPN 项目主页](/project/JLU-WebVPN/) |
+| 使用教程 | [JLU-WebVPN 使用教程](/project/JLU-WebVPN/tutorial) |
 | GitHub 仓库 | [Yummy-He/JLU-WebVPN](https://github.com/Yummy-He/JLU-WebVPN) |
 
 ## URL 结构分析

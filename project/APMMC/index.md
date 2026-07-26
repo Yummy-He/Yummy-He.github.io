@@ -4,7 +4,7 @@ subtitle: "计算程序与数学算法在化学中的应用（Applications of Pr
 layout: project-item  # 改用新建的 project-item 布局（复用 post 样式）
 author: "何尹铭"
 header-style: text  # 保留 post 布局的文本式头部
-# date: 2024-01-01  # 新增日期（用于列表排序）
+date: 2024-01-01  # 新增日期（用于列表排序）
 tags:
   - LaTeX
   - Fortran
